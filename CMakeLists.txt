@@ -10,8 +10,5 @@ set(CMAKE_CXX_COMPILER_WORKS 1)
 
 project(EnCS NONE)
 
-add_subdirectory(libs/xecs)
-add_subdirectory(libs/ecs)
-add_subdirectory(libs/utilities)
-add_subdirectory(libs/pico)
+add_subdirectory(libs)
 add_subdirectory(apps)

@@ -45,26 +45,6 @@
 		},
 		{
 			"hidden": true,
-			"name": "pico",
-			//"generator": "Ninja",
-			"binaryDir": "${sourceDir}/out/build/${presetName}",
-			//"toolchainFile": "toolchains/arm-gcc-cortex-toolchain.cmake",
-			"cacheVariables": {
-				"CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-				"TARGET": "pico",
-				"PICO_SDK_PATH": "/mnt/d/4. Projects/2. CPP/pico-sdk"
-			},
-			"vendor": {
-				"microsoft.com/VisualStudioSettings/CMake/1.0": {
-					"hostOS": [ "Linux" ]
-				},
-				"microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
-					"sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
-				}
-			}
-		},
-		{
-			"hidden": true,
 			"name": "cortex-m0+",
 			"generator": "Ninja",
 			"binaryDir": "${sourceDir}/out/build/${presetName}",
@@ -110,18 +90,18 @@
 			}
 		},
 		{
-			"name": "pico-debug",
-			"inherits": "pico",
+			"name": "m0-debug",
+			"inherits": "cortex-m0+",
 			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Debug"
+				"CMAKE_BUILD_TYPE": "Debug",
+				"BOARD_LINKER_FILE": "pico.ld"
 			}
 		},
 		{
-			"name": "cortex-m0+-debug",
+			"name": "m0-release",
 			"inherits": "cortex-m0+",
-			"verbose": 1,
 			"cacheVariables": {
-				"CMAKE_BUILD_TYPE": "Debug",
+				"CMAKE_BUILD_TYPE": "Release",
 				"BOARD_LINKER_FILE": "pico.ld"
 			}
 		}

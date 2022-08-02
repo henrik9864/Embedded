@@ -1,0 +1,5 @@
+add_subdirectory(xecs)
+add_subdirectory(ecs)
+add_subdirectory(utilities)
+add_subdirectory(pico)
+add_subdirectory(etl)
