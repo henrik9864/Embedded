@@ -8,10 +8,14 @@ MEMORY
   ram   (rwx) : ORIGIN = 0x20000000, LENGTH = 264K
 
   /* RP2040 pheripheral registers */
-  sio     (r) : ORIGIN = 0xD0000000, LENGTH = 1K
-  iobank0 (r) : ORIGIN = 0x40014000, LENGTH = 1K
-  resets  (r) : ORIGIN = 0x4000C000, LENGTH = 1K
-  clocks  (r) : ORIGIN = 0x40008000, LENGTH = 1K
+  sio      (r) : ORIGIN = 0xD0000000, LENGTH = 1K
+  iobank0  (r) : ORIGIN = 0x40014000, LENGTH = 1K
+  resets   (r) : ORIGIN = 0x4000C000, LENGTH = 1K
+  clocks   (r) : ORIGIN = 0x40008000, LENGTH = 1K
+  rsoc     (r) : ORIGIN = 0x40060000, LENGTH = 1K
+  xsoc     (r) : ORIGIN = 0x40024000, LENGTH = 1K
+  pll_sys  (r) : ORIGIN = 0x40028000, LENGTH = 1K
+  pll_usb  (r) : ORIGIN = 0x4002c000, LENGTH = 1K
 }
 
 SECTIONS
@@ -23,8 +27,6 @@ SECTIONS
     *(.boot2*)
     . = 256 - 4; /* Ensure bootloader is 256 bytes and make space for CRC checksum */
     LONG(0x7A4EB274) /* CRC w25q080 */
-    /*LONG(0x5D4C22EA)*/ /* CRC Generic */
-    /*LONG(0xD965BC28)*/ /* CRC Custom*/
   } > boot
 
   /* Vector Table */
@@ -100,6 +102,7 @@ SECTIONS
     _ebss = .;
   }
 
+  /* RP2040 Registers */
   .sio_regs (NOLOAD) : {
     *(.sio_regs)
   } > sio
@@ -115,6 +118,22 @@ SECTIONS
   .clock_regs (NOLOAD) : {
     *(.clock_regs)
   } > clocks
+
+  .rsoc_regs (NOLOAD) : {
+    *(.rsoc_regs)
+  } > rsoc
+
+  .xsoc_regs (NOLOAD) : {
+    *(.xsoc_regs)
+  } > xsoc
+
+  .pll_sys_regs (NOLOAD) : {
+    *(.pll_sys_regs)
+  } > pll_sys
+
+  .pll_usb_regs (NOLOAD) : {
+    *(.pll_usb_regs)
+  } > pll_usb
 };
 
 _estack = ORIGIN(ram) + LENGTH(ram); /* stack starts at end of ram */

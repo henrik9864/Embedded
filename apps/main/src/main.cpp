@@ -30,7 +30,7 @@ const uint32_t freq_1mhz = 1 * 1000000;
 const uint32_t freq_100khz = 100000;
 const uint32_t freq_noe = 0x10000000;
 
-const uint32_t freq = freq_100khz;
+const uint32_t freq = freq_1mhz;
 
 void blink()
 {
@@ -51,59 +51,57 @@ void blinkFase()
 
 int main(void)
 {
-    s_xsoc.startup.delay = 47;
+    s_xsoc.control.freq_range = 0xaab;
+    s_xsoc.startup.x4 = 0x1;
+    s_xsoc.startup.delay = 0x00c4;
 
     // Enable XOSC clock
-    s_xsoc.control.enable = 0xfab;
+    s_xsoc.control.enable = 0xfab; // Enable
+    //s_xsoc.control.enable = 0xd1e; // Disable
 
-    while (!s_xsoc.status.stable) {}
+    while (!s_xsoc.status.stable || !s_xsoc.status.enabled) {}
+
+    s_clocks.sys.control.src = 0x0;
+    s_clocks.sys.control.src = 0x0;
+
+    while (!s_clocks.sys.selected) {}
+    while (!s_clocks.ref.selected) {}
 
     /*
-    delay(freq_100khz / 10);
-    blinkFase();
-    //s_clocks.sys.div.integer = 0xaa0 + 0x1;
+    //Turn on PLL for 48mhz
+    s_pll_usb.control.refdiv = 0x1;
+    s_pll_usb.fbdiv.div = 64;
 
-    //s_rsoc.control.freq_range = 0xaa0;
-    //s_rsoc.div.div = 0xaa0 + 1;
+    s_pll_usb.pwr.pd = 0x0;
+    s_pll_usb.pwr.vcopd = 0x0;
 
-    s_pll_sys.control.refdiv = 0x1;
-    s_pll_sys.fbdiv.div = 120;
+    while (s_pll_usb.control.lock) {}
 
-    s_pll_sys.pwr.pd = 1;
-    s_pll_sys.pwr.vcopd = 1;
+    s_pll_usb.prim.postdiv1 = 4;
+    s_pll_usb.prim.postdiv2 = 4;
 
-    blinkFase();
-
-    //while(!s_pll_sys.control.lock) { delay(1); };
-
-    delay(freq_100khz / 10);
-    blinkFase();
-
-    s_pll_sys.prim.postdiv1 = 6;
-    s_pll_sys.prim.postdiv2 = 5;
-
-    s_pll_sys.pwr.postdivpd = 1;
-
-    delay(freq_100khz / 10);
-
+    s_pll_usb.pwr.postdivpd = 0x0;
+    //s_pll_sys.pwr.dsmpd = 0x0;
     */
 
-    s_pll_sys.prim.postdiv1 = 6;
-    s_pll_sys.prim.postdiv2 = 5;
-    s_pll_sys.fbdiv.div = 120;
-
-    //s_pll_sys.control.refdiv = 0x1;
-
     // Set clock source
-    s_clocks.sys.control.src = 0x0;
-    s_clocks.sys.control.auxsrc = 0x0;
+    s_clocks.sys.control.auxsrc = 0x0; // PLL
+    //s_clocks.sys.control.auxsrc = 0x3; // XSOC
 
     while (!s_clocks.sys.selected) {}
 
     s_clocks.sys.control.src = 0x1;
-    s_clocks.sys.div.integer = 0x1;
+    //s_clocks.ref.control.src = 0x2;
 
-    //uint32_t add = reinterpret_cast<uint32_t>(&s_rsoc.div);
+    while (!s_clocks.sys.selected) {}
+
+    s_clocks.sys.div.integer = 0x1;
+    //s_clocks.ref.div.integer = 0x1;
+
+    //delay(100000 * 10);
+
+    //s_clocks.sys.control.auxsrc = 0x0;
+
 
     s_resets.reset.io_bank_0 = 0;
     s_resets.reset.pads_bank_0 = 0;
@@ -114,21 +112,22 @@ int main(void)
     s_sio.gpio_oe_set = 1 << 25;
     s_sio.gpio_out_set = 1 << 25;
 
-    /*
-    if (add == 0x40060000 + 0x10 && false)
+    uint32_t add = reinterpret_cast<uint32_t>(&s_xsoc.dormant);
+    if (add == 0x40024000 + 0x09)
     {
         blink();
-        delay(freq / 2);
+        delay(freq / 4);
 
         blink();
-        delay(freq / 2);
+        delay(freq / 4);
 
         blink();
-        delay(freq / 2);
+        delay(freq / 4);
 
         blink();
-        delay(freq / 2);
+        delay(freq / 4);
     }
+    /*
     */
 
     /*
@@ -147,10 +146,10 @@ int main(void)
     */
     while (true)
     {
-        s_sio.gpio_out_clr = 1 << 25;
+        s_sio.gpio_out_set = 1 << 25;
         delay(freq);
 
-        s_sio.gpio_out_set = 1 << 25;
+        s_sio.gpio_out_clr = 1 << 25;
         delay(freq);
     }
     return(0);

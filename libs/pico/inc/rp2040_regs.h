@@ -111,6 +111,24 @@ struct Clocks
 
         uint32_t selected;
     } sys;
+
+    struct
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t : 5;
+                uint32_t auxsrc : 3;
+                uint32_t : 2;
+                uint32_t kill : 1;
+                uint32_t enable : 1;
+            };
+        } control;
+
+        uint32_t selected;
+    } peripheral;
 };
 
 struct IO_BANK_0 {
@@ -410,4 +428,4 @@ volatile Clocks s_clocks __attribute__((section(".clock_regs")));
 volatile RSOC s_rsoc __attribute__((section(".rsoc_regs")));
 volatile XSOC s_xsoc __attribute__((section(".xsoc_regs")));
 volatile PLL s_pll_sys __attribute__((section(".pll_sys_regs")));
-volatile PLL s_pll_usb __attribute__((section(".pll_sys_usb")));
+volatile PLL s_pll_usb __attribute__((section(".pll_usb_regs")));
