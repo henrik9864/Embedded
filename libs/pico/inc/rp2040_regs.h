@@ -129,6 +129,229 @@ struct Clocks
 
         uint32_t selected;
     } peripheral;
+
+    struct
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t : 5;
+                uint32_t auxsrc : 3;
+                uint32_t : 2;
+                uint32_t kill : 1;
+                uint32_t enable : 1;
+                uint32_t : 4;
+                uint32_t phase : 2;
+                uint32_t : 2;
+                uint32_t nudge : 1;
+            };
+        } control;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t : 8;
+                uint32_t integer : 2;
+            };
+        } div;
+
+        uint32_t selected;
+    } usb;
+
+    struct
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t : 5;
+                uint32_t auxsrc : 3;
+                uint32_t : 2;
+                uint32_t kill : 1;
+                uint32_t enable : 1;
+                uint32_t : 4;
+                uint32_t phase : 2;
+                uint32_t : 2;
+                uint32_t nudge : 1;
+            };
+        } control;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t : 8;
+                uint32_t integer : 2;
+            };
+        } div;
+
+        uint32_t selected;
+    } adc;
+
+    struct
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t : 5;
+                uint32_t auxsrc : 3;
+                uint32_t : 2;
+                uint32_t kill : 1;
+                uint32_t enable : 1;
+                uint32_t : 4;
+                uint32_t phase : 2;
+                uint32_t : 2;
+                uint32_t nudge : 1;
+            };
+        } control;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t : 8;
+                uint32_t integer : 24;
+            };
+        } div;
+
+        uint32_t selected;
+    } rtc;
+
+    struct
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t timeout : 8;
+                uint32_t enable : 1;
+                uint32_t : 3;
+                uint32_t force : 1;
+                uint32_t : 3;
+                uint32_t clear : 1;
+            };
+        } control;
+        
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t resussed : 1;
+            };
+            
+        } status;
+        
+    } sys_resus;
+
+    struct
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t ref_khz : 20;
+            };
+            
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t min_khz : 25;
+            };
+            
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t max_khz : 25;
+            };
+            
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t delay : 3;
+            };
+            
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t interval : 4;
+            };
+            
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t src : 8;
+            };
+            
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t pass : 1;
+                uint32_t : 3;
+                uint32_t done : 1;
+                uint32_t : 3;
+                uint32_t running : 1;
+                uint32_t : 3;
+                uint32_t waiting : 1;
+                uint32_t : 3;
+                uint32_t fail : 1;
+                uint32_t : 3;
+                uint32_t slow : 1;
+                uint32_t : 3;
+                uint32_t fast : 1;
+                uint32_t : 3;
+                uint32_t died : 1;
+            };
+            
+        } status;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t frac : 5;
+                uint32_t : 3;
+                uint32_t khz : 25;
+            };
+            
+        } result;
+    } fc0;
 };
 
 struct IO_BANK_0 {
