@@ -644,6 +644,11 @@ struct PLL
     } prim;
 };
 
+struct UART
+{
+
+};
+
 volatile SIO s_sio __attribute__((section(".sio_regs")));
 volatile IO_BANK_0 s_io_bank_0 __attribute__((section(".io_bank_0_regs")));
 volatile RESETS s_resets __attribute__((section(".reset_regs")));
