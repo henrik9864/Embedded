@@ -14,6 +14,7 @@ uint32_t get(const uint32_t a1)
     return *reinterpret_cast<uint32_t*>(a1);
 }
 
+// 360ns at 133mhz
 volatile void delay(const uint32_t a1)
 {
     for (size_t i = 0; i < a1; i++)
@@ -22,12 +23,14 @@ volatile void delay(const uint32_t a1)
     }
 }
 
+// 235ns at 133mhz
 void inline __attribute__((always_inline)) delay2(uint32_t ticks)
 {
-    ticks /= 4;
+    //ticks /= 4;
     while(ticks--) __asm("");
 }
 
+// 225ns at 133mhz
 static inline void delay3(uint32_t cycles) {
     __asm volatile (
     ".syntax unified\n"
@@ -37,6 +40,7 @@ static inline void delay3(uint32_t cycles) {
         );
 }
 
+const uint32_t freq_200mhz = 200 * 1000000;
 const uint32_t freq_133mhz = 133 * 1000000;
 const uint32_t freq_125mhz = 125 * 1000000;
 const uint32_t freq_100mhz = 100 * 1000000;
@@ -49,7 +53,7 @@ const uint32_t freq_1mhz = 1 * 1000000;
 const uint32_t freq_100khz = 100000;
 const uint32_t freq_noe = 0x10000000;
 
-const uint32_t freq = freq_48mhz;
+const uint32_t freq = freq_200mhz;
 
 void sleep(const uint32_t ns)
 {
@@ -172,9 +176,10 @@ int main(void)
 
     // Setup SYS PLL for 12 MHz * 133 / 6 / 2 = 133 MHz
     //init_pll_sys(1, 133, 6, 2);
+    init_pll_sys(1, 100, 6, 1);
     
     // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
-    init_pll_sys(1, 120, 6, 5);
+    //init_pll_sys(1, 120, 6, 5);
 
     // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
     init_pll_usb(1, 120, 6, 5);
@@ -205,51 +210,54 @@ int main(void)
     // Blink
     while (true)
     {
+        /*
         // WS2812B
         for (const auto bit : arr)
         {
             if (bit == 1)
             {
                 //s_sio.gpio_out_set = 1 << LedPin;
-                //sleep(800 * 100000000);
+                //sleep(800);
                 //delay3(38);
 
                 //s_sio.gpio_out_clr = 1 << LedPin;
-                //sleep(450 * 100000000);
+                //sleep(450);
                 //delay3(21);
 
-                s_sio.gpio_out_set = 1 << LedPin;
-                sleep(100 * 100000000);
+                //s_sio.gpio_out_set = 1 << LedPin;
+                //sleep(100 * 100000000);
             }
             else
             {
                 //s_sio.gpio_out_set = 1 << LedPin;
-                //sleep(400 * 100000000);
+                //sleep(400);
                 //delay3(19);
 
                 //s_sio.gpio_out_clr = 1 << LedPin;
-                //sleep(450 * 100000000);
+                //sleep(450);
                 //delay3(40);
 
-                s_sio.gpio_out_set = 1 << LedPin2;
-                sleep(100 * 100000000);
+                //s_sio.gpio_out_set = 1 << LedPin2;
+                //sleep(100 * 100000000);
             }
 
-            s_sio.gpio_out_clr = 1 << LedPin;
-            s_sio.gpio_out_clr = 1 << LedPin2;
+            //s_sio.gpio_out_clr = 1 << LedPin;
+            //s_sio.gpio_out_clr = 1 << LedPin2;
 
-            sleep(100 * 100000000);
+            //sleep(100 * 100000000);
         }
-
-        s_sio.gpio_out_clr = 1 << LedPin;
-        s_sio.gpio_out_clr = 1 << LedPin2;
-        sleep(2000 * 100000000);
-
-        //s_sio.gpio_out_set = 1 << LedPin;
-        //delay3(freq * 5);
+        */
 
         //s_sio.gpio_out_clr = 1 << LedPin;
-        //delay3(freq * 5);
+        //s_sio.gpio_out_clr = 1 << LedPin2;
+        //leep(2000 * 100000000);
+        //sleep(2000);
+
+        s_sio.gpio_out_set = 1 << LedPin;
+        delay(1);
+
+        s_sio.gpio_out_clr = 1 << LedPin;
+        delay(1);
     }
     return(0);
 }
