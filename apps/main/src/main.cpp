@@ -49,7 +49,7 @@ const uint32_t freq_1mhz = 1 * 1000000;
 const uint32_t freq_100khz = 100000;
 const uint32_t freq_noe = 0x10000000;
 
-const uint32_t freq = freq_48mhz;
+const uint32_t freq = freq_133mhz;
 
 void sleep(const uint32_t ns)
 {
@@ -171,10 +171,10 @@ int main(void)
     init_xsoc();
 
     // Setup SYS PLL for 12 MHz * 133 / 6 / 2 = 133 MHz
-    //init_pll_sys(1, 133, 6, 2);
+    init_pll_sys(1, 133, 6, 2);
     
     // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
-    init_pll_sys(1, 120, 6, 5);
+    //init_pll_sys(1, 120, 6, 5);
 
     // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
     init_pll_usb(1, 120, 6, 5);
@@ -183,9 +183,9 @@ int main(void)
 
     init_gpio();
 
-    const uint32_t LedPin = 8;
-    const uint32_t LedPin2 = 14;
     const uint32_t WS28Pin = 16;
+    const uint32_t LedPin2 = 14;
+    const uint32_t LedPin = WS28Pin;
 
     // Set pin 16(WS2812B LED) as out
     s_io_bank_0.gpio[LedPin].control.funcsel = 5; // Set func mode to SIO
@@ -210,40 +210,40 @@ int main(void)
         {
             if (bit == 1)
             {
-                //s_sio.gpio_out_set = 1 << LedPin;
-                //sleep(800 * 100000000);
+                s_sio.gpio_out_set = 1 << LedPin;
+                sleep(700);
                 //delay3(38);
 
-                //s_sio.gpio_out_clr = 1 << LedPin;
-                //sleep(450 * 100000000);
+                s_sio.gpio_out_clr = 1 << LedPin;
+                sleep(600);
                 //delay3(21);
 
-                s_sio.gpio_out_set = 1 << LedPin;
-                sleep(100 * 100000000);
+                //s_sio.gpio_out_set = 1 << LedPin;
+                //sleep(100 * 100000000);
             }
             else
             {
-                //s_sio.gpio_out_set = 1 << LedPin;
-                //sleep(400 * 100000000);
+                s_sio.gpio_out_set = 1 << LedPin;
+                sleep(350);
                 //delay3(19);
 
-                //s_sio.gpio_out_clr = 1 << LedPin;
-                //sleep(450 * 100000000);
+                s_sio.gpio_out_clr = 1 << LedPin;
+                sleep(800);
                 //delay3(40);
 
-                s_sio.gpio_out_set = 1 << LedPin2;
-                sleep(100 * 100000000);
+                //s_sio.gpio_out_set = 1 << LedPin2;
+                //sleep(100 * 100000000);
             }
 
-            s_sio.gpio_out_clr = 1 << LedPin;
-            s_sio.gpio_out_clr = 1 << LedPin2;
+            //s_sio.gpio_out_clr = 1 << LedPin;
+            //s_sio.gpio_out_clr = 1 << LedPin2;
 
-            sleep(100 * 100000000);
+            //sleep(100 * 100000000);
         }
 
         s_sio.gpio_out_clr = 1 << LedPin;
-        s_sio.gpio_out_clr = 1 << LedPin2;
-        sleep(2000 * 100000000);
+        //s_sio.gpio_out_clr = 1 << LedPin2;
+        sleep(2000);
 
         //s_sio.gpio_out_set = 1 << LedPin;
         //delay3(freq * 5);
