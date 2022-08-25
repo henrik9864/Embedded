@@ -3,6 +3,17 @@
 #include <array>
 
 #include "rp2040.h"
+//#include "pio/ws2812.hpp"
+
+static uint16_t ws2812_program_instructions[]
+__attribute__((section(".pio_0_mem"))) {
+            //     .wrap_target
+    0x6221, //  0: out    x, 1            side 0 [2] 
+    0x1123, //  1: jmp    !x, 3           side 1 [1] 
+    0x1400, //  2: jmp    0               side 1 [4] 
+    0xa442, //  3: nop                    side 0 [4] 
+            //     .wrap
+};
 
 void put(const uint32_t a1, const uint32_t a2)
 {
@@ -53,7 +64,7 @@ const uint32_t freq_1mhz = 1 * 1000000;
 const uint32_t freq_100khz = 100000;
 const uint32_t freq_noe = 0x10000000;
 
-const uint32_t freq = freq_200mhz;
+const uint32_t freq = freq_48mhz;
 
 void sleep(const uint32_t ns)
 {
@@ -176,12 +187,12 @@ int main(void)
 
     // Setup SYS PLL for 12 MHz * 133 / 6 / 2 = 133 MHz
     //init_pll_sys(1, 133, 6, 2);
-    init_pll_sys(1, 100, 6, 1);
+    //init_pll_sys(1, 100, 6, 1);
     
     // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
-    //init_pll_sys(1, 120, 6, 5);
+    init_pll_sys(1, 120, 6, 5);
 
-    // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
+    // Setup USB PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
     init_pll_usb(1, 120, 6, 5);
 
     setup_clocks();
@@ -207,57 +218,19 @@ int main(void)
     const std::array<uint32_t, 24> arr = { 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
     //const std::array<uint32_t, 24> arr = { 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
 
-    // Blink
-    while (true)
+    //if (s_pio_0.instr_mem[0] == 0x6221)
+    auto data = *reinterpret_cast<uint32_t*>(0x50200000 + 0x048);
+    if (data == 0x0)
     {
-        /*
-        // WS2812B
-        for (const auto bit : arr)
+        // Blink
+        while (true)
         {
-            if (bit == 1)
-            {
-                //s_sio.gpio_out_set = 1 << LedPin;
-                //sleep(800);
-                //delay3(38);
+            s_sio.gpio_out_set = 1 << LedPin;
+            delay(1);
 
-                //s_sio.gpio_out_clr = 1 << LedPin;
-                //sleep(450);
-                //delay3(21);
-
-                //s_sio.gpio_out_set = 1 << LedPin;
-                //sleep(100 * 100000000);
-            }
-            else
-            {
-                //s_sio.gpio_out_set = 1 << LedPin;
-                //sleep(400);
-                //delay3(19);
-
-                //s_sio.gpio_out_clr = 1 << LedPin;
-                //sleep(450);
-                //delay3(40);
-
-                //s_sio.gpio_out_set = 1 << LedPin2;
-                //sleep(100 * 100000000);
-            }
-
-            //s_sio.gpio_out_clr = 1 << LedPin;
-            //s_sio.gpio_out_clr = 1 << LedPin2;
-
-            //sleep(100 * 100000000);
+            s_sio.gpio_out_clr = 1 << LedPin;
+            delay(1);
         }
-        */
-
-        //s_sio.gpio_out_clr = 1 << LedPin;
-        //s_sio.gpio_out_clr = 1 << LedPin2;
-        //leep(2000 * 100000000);
-        //sleep(2000);
-
-        s_sio.gpio_out_set = 1 << LedPin;
-        delay(1);
-
-        s_sio.gpio_out_clr = 1 << LedPin;
-        delay(1);
     }
     return(0);
 }

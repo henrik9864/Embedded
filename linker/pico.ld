@@ -16,6 +16,12 @@ MEMORY
   xsoc     (r) : ORIGIN = 0x40024000, LENGTH = 1K
   pll_sys  (r) : ORIGIN = 0x40028000, LENGTH = 1K
   pll_usb  (r) : ORIGIN = 0x4002c000, LENGTH = 1K
+  pio_0    (r) : ORIGIN = 0x50200000, LENGTH = 1K
+  pio_1    (r) : ORIGIN = 0x50300000, LENGTH = 1K
+
+  /* PIO memory registers */
+  pio_0_mem (rw) : ORIGIN = 0x50200000 + 0x048, LENGTH = 1K
+  pio_1_mem (rw) : ORIGIN = 0x50300000 + 0x048, LENGTH = 1K
 }
 
 SECTIONS
@@ -134,6 +140,25 @@ SECTIONS
   .pll_usb_regs (NOLOAD) : {
     *(.pll_usb_regs)
   } > pll_usb
+
+  .pio_0_regs (NOLOAD) : {
+    *(.pio_0_regs)
+  } > pio_0
+
+  .pio_1_regs (NOLOAD) : {
+    *(.pio_1_regs)
+  } > pio_1
+
+  /* PIO memory setup */
+  .pio_0_mem :
+	{
+		KEEP(*(.pio_0_mem))
+	} > pio_0_mem
+
+  .pio_1_mem :
+	{
+		KEEP(*(.pio_1_mem))
+	} > pio_1_mem
 };
 
 _estack = ORIGIN(ram) + LENGTH(ram); /* stack starts at end of ram */
