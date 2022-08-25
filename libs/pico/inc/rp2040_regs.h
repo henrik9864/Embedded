@@ -644,9 +644,271 @@ struct PLL
     } prim;
 };
 
-struct UART
+struct PIO
 {
+    union
+    {
+        uint32_t : 32;
+        struct
+        {
+            uint32_t sm_enable : 4;
+            uint32_t sm_restart : 4;
+            uint32_t clkdiv_restart : 4;
+        };
+    } control;
 
+    union
+    {
+        uint32_t : 32;
+        struct
+        {
+            uint32_t rxfull : 4;
+            uint32_t : 4;
+            uint32_t rxempty : 4;
+            uint32_t : 4;
+            uint32_t txfull : 4;
+            uint32_t : 4;
+            uint32_t txempty : 4;
+        };
+    } fstat;
+
+    union
+    {
+        uint32_t : 32;
+        struct
+        {
+            uint32_t rxstall : 4;
+            uint32_t : 4;
+            uint32_t rxunder : 4;
+            uint32_t : 4;
+            uint32_t txover : 4;
+            uint32_t : 4;
+            uint32_t txstall : 4;
+        };
+    } fdebug;
+
+    union
+    {
+        uint32_t : 32;
+        struct
+        {
+            uint32_t tx0 : 4;
+            uint32_t rx0 : 4;
+            uint32_t tx1 : 4;
+            uint32_t rx1 : 4;
+            uint32_t tx2 : 4;
+            uint32_t rx2 : 4;
+            uint32_t tx3 : 4;
+            uint32_t rx3 : 4;
+        };
+    } flevel;
+
+    uint32_t txf[4];
+    uint32_t rxf[4];
+
+    union
+    {
+        uint32_t : 32;
+        struct
+        {
+            uint32_t state_irq : 8;
+        };
+    };
+
+    union
+    {
+        uint32_t : 32;
+        struct
+        {
+            uint32_t state_irq_force : 8;
+        };
+    };
+
+    uint32_t input_sync_bypass;
+    uint32_t dbg_padout;
+    uint32_t dbg_padoe;
+
+    union
+    {
+        uint32_t : 32;
+        struct
+        {
+            uint32_t fifo_depth : 6;
+            uint32_t : 2;
+            uint32_t sm_count : 4;
+            uint32_t : 4;
+            uint32_t imem_size : 6;
+        };
+    } dbg_cfginfo;
+
+    uint32_t instr_mem[31];
+
+    union
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t : 8;
+                uint32_t frac : 8;
+                uint32_t integer : 16;
+            };
+        } clkdiv;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t status_n : 4;
+                uint32_t status_sel : 1;
+                uint32_t : 2;
+                uint32_t wrap_bottom : 5;
+                uint32_t wrap_top : 5;
+                uint32_t out_sticky : 1;
+                uint32_t inline_out_en : 1;
+                uint32_t out_en_sel : 5;
+                uint32_t jmp_pin : 5;
+                uint32_t side_pindir : 1;
+                uint32_t side_en : 1;
+                uint32_t exec_stalled : 1;
+            };
+        } execctrl;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t : 16;
+                uint32_t autopush : 1;
+                uint32_t autopull : 1;
+                uint32_t in_shiftdir : 1;
+                uint32_t out_shiftdir : 1;
+                uint32_t push_tresh : 5;
+                uint32_t pull_tresh : 5;
+                uint32_t fjoin_tx : 1;
+                uint32_t fjoin_rx : 1;
+            };
+        } shiftctrl;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t addr : 5;
+            };
+        } addr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t instr : 16;
+            };
+        } instr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t out_base : 5;
+                uint32_t set_base : 5;
+                uint32_t sideset_base : 5;
+                uint32_t in_base : 5;
+                uint32_t out_count : 6;
+                uint32_t set_count : 3;
+                uint32_t sideset_count : 3;
+            };
+        } pinctrl;
+    } sm[3];
+
+    union
+    {
+        uint32_t : 32;
+        struct
+        {
+            uint32_t sm0_rxnempty : 1;
+            uint32_t sm1_rxnempty : 1;
+            uint32_t sm2_rxnempty : 1;
+            uint32_t sm3_rxnempty : 1;
+            uint32_t sm0_txfull : 1;
+            uint32_t sm1_txfull : 1;
+            uint32_t sm2_txfull : 1;
+            uint32_t sm3_txfull : 1;
+            uint32_t sm0 : 1;
+            uint32_t sm1 : 1;
+            uint32_t sm2 : 1;
+            uint32_t sm3 : 1;
+        };
+    } intr;
+
+    union
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t sm0_rxnempty : 1;
+                uint32_t sm1_rxnempty : 1;
+                uint32_t sm2_rxnempty : 1;
+                uint32_t sm3_rxnempty : 1;
+                uint32_t sm0_txfull : 1;
+                uint32_t sm1_txfull : 1;
+                uint32_t sm2_txfull : 1;
+                uint32_t sm3_txfull : 1;
+                uint32_t sm0 : 1;
+                uint32_t sm1 : 1;
+                uint32_t sm2 : 1;
+                uint32_t sm3 : 1;
+            };
+        } intr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t sm0_rxnempty : 1;
+                uint32_t sm1_rxnempty : 1;
+                uint32_t sm2_rxnempty : 1;
+                uint32_t sm3_rxnempty : 1;
+                uint32_t sm0_txfull : 1;
+                uint32_t sm1_txfull : 1;
+                uint32_t sm2_txfull : 1;
+                uint32_t sm3_txfull : 1;
+                uint32_t sm0 : 1;
+                uint32_t sm1 : 1;
+                uint32_t sm2 : 1;
+                uint32_t sm3 : 1;
+            };
+        } intf;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t sm0_rxnempty : 1;
+                uint32_t sm1_rxnempty : 1;
+                uint32_t sm2_rxnempty : 1;
+                uint32_t sm3_rxnempty : 1;
+                uint32_t sm0_txfull : 1;
+                uint32_t sm1_txfull : 1;
+                uint32_t sm2_txfull : 1;
+                uint32_t sm3_txfull : 1;
+                uint32_t sm0 : 1;
+                uint32_t sm1 : 1;
+                uint32_t sm2 : 1;
+                uint32_t sm3 : 1;
+            };
+        } ints;
+    } irq[1];
 };
 
 volatile SIO s_sio __attribute__((section(".sio_regs")));
@@ -657,3 +919,5 @@ volatile RSOC s_rsoc __attribute__((section(".rsoc_regs")));
 volatile XSOC s_xsoc __attribute__((section(".xsoc_regs")));
 volatile PLL s_pll_sys __attribute__((section(".pll_sys_regs")));
 volatile PLL s_pll_usb __attribute__((section(".pll_usb_regs")));
+volatile PIO s_pio_0 __attribute__((section(".pio_0_regs")));
+volatile PIO s_pio_1 __attribute__((section(".pio_1_regs")));

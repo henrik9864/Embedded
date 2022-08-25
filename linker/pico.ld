@@ -20,8 +20,8 @@ MEMORY
   pio_1    (r) : ORIGIN = 0x50300000, LENGTH = 1K
 
   /* PIO memory registers */
-  pio_0_instructions (r) : ORIGIN = 0x50200000 + 0x048, LENGTH = 1K
-  pio_1_instructions (r) : ORIGIN = 0x50300000 + 0x048, LENGTH = 1K
+  pio_0_mem (rw) : ORIGIN = 0x50200000 + 0x048, LENGTH = 1K
+  pio_1_mem (rw) : ORIGIN = 0x50300000 + 0x048, LENGTH = 1K
 }
 
 SECTIONS
@@ -149,16 +149,16 @@ SECTIONS
     *(.pio_1_regs)
   } > pio_1
 
-  /* PIO instructions */
-  .pio_0_instructions_regs :
+  /* PIO memory setup */
+  .pio_0_mem :
 	{
-		KEEP(*(.pio_0_instructions))
-	} > pio_0_instructions
+		KEEP(*(.pio_0_mem))
+	} > pio_0_mem
 
-  .pio_1_instructions_regs :
+  .pio_1_mem :
 	{
-		KEEP(*(.pio_1_instructions))
-	} > pio_1_instructions
+		KEEP(*(.pio_1_mem))
+	} > pio_1_mem
 };
 
 _estack = ORIGIN(ram) + LENGTH(ram); /* stack starts at end of ram */
