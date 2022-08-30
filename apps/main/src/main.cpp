@@ -3,17 +3,7 @@
 #include <array>
 
 #include "rp2040.h"
-//#include "pio/ws2812.hpp"
-
-static uint16_t ws2812_program_instructions[]
-__attribute__((section(".pio_0_mem"))) {
-            //     .wrap_target
-    0x6221, //  0: out    x, 1            side 0 [2] 
-    0x1123, //  1: jmp    !x, 3           side 1 [1] 
-    0x1400, //  2: jmp    0               side 1 [4] 
-    0xa442, //  3: nop                    side 0 [4] 
-            //     .wrap
-};
+#include "pio/ws2812.hpp"
 
 void put(const uint32_t a1, const uint32_t a2)
 {
