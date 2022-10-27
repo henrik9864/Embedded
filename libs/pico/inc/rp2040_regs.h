@@ -741,9 +741,9 @@ struct PIO
         };
     } dbg_cfginfo;
 
-    uint32_t instr_mem[31];
+    uint32_t instr_mem[32];
 
-    union
+    struct
     {
         union
         {
@@ -800,7 +800,7 @@ struct PIO
             {
                 uint32_t addr : 5;
             };
-        } addr;
+        };
 
         union
         {
@@ -809,7 +809,7 @@ struct PIO
             {
                 uint32_t instr : 16;
             };
-        } instr;
+        };
 
         union
         {
@@ -825,7 +825,7 @@ struct PIO
                 uint32_t sideset_count : 3;
             };
         } pinctrl;
-    } sm[3];
+    } sm[4];
 
     union
     {
@@ -911,8 +911,66 @@ struct PIO
     } irq[1];
 };
 
+struct PADS_BANK_0
+{
+    union
+    {
+        uint32_t : 32;
+        union
+        {
+            uint32_t voltage_select : 1;
+        };
+    };
+    
+    union
+    {
+        uint32_t : 32;
+        union
+        {
+            uint32_t slewfast : 1;
+            uint32_t schmitt : 1;
+            uint32_t pde : 1;
+            uint32_t pue : 1;
+            uint32_t drive : 2;
+            uint32_t ie : 1;
+            uint32_t od : 1;
+        };
+    } gpio[30];
+    
+    union
+    {
+        uint32_t : 32;
+        union
+        {
+            uint32_t slewfast : 1;
+            uint32_t schmitt : 1;
+            uint32_t pde : 1;
+            uint32_t pue : 1;
+            uint32_t drive : 2;
+            uint32_t ie : 1;
+            uint32_t od : 1;
+        };
+    } swclk;
+    
+    union
+    {
+        uint32_t : 32;
+        union
+        {
+            uint32_t slewfast : 1;
+            uint32_t schmitt : 1;
+            uint32_t pde : 1;
+            uint32_t pue : 1;
+            uint32_t drive : 2;
+            uint32_t ie : 1;
+            uint32_t od : 1;
+        };
+    } swd;
+};
+
 volatile SIO s_sio __attribute__((section(".sio_regs")));
 volatile IO_BANK_0 s_io_bank_0 __attribute__((section(".io_bank_0_regs")));
+volatile PADS_BANK_0 s_pads_bank_0 __attribute__((section(".pads_bank_0_regs")));
 volatile RESETS s_resets __attribute__((section(".reset_regs")));
 volatile Clocks s_clocks __attribute__((section(".clock_regs")));
 volatile RSOC s_rsoc __attribute__((section(".rsoc_regs")));

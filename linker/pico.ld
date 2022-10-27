@@ -8,16 +8,17 @@ MEMORY
   ram   (rwx) : ORIGIN = 0x20000000, LENGTH = 264K
 
   /* RP2040 pheripheral registers */
-  sio      (r) : ORIGIN = 0xD0000000, LENGTH = 1K
-  iobank0  (r) : ORIGIN = 0x40014000, LENGTH = 1K
-  resets   (r) : ORIGIN = 0x4000C000, LENGTH = 1K
-  clocks   (r) : ORIGIN = 0x40008000, LENGTH = 1K
-  rsoc     (r) : ORIGIN = 0x40060000, LENGTH = 1K
-  xsoc     (r) : ORIGIN = 0x40024000, LENGTH = 1K
-  pll_sys  (r) : ORIGIN = 0x40028000, LENGTH = 1K
-  pll_usb  (r) : ORIGIN = 0x4002c000, LENGTH = 1K
-  pio_0    (r) : ORIGIN = 0x50200000, LENGTH = 1K
-  pio_1    (r) : ORIGIN = 0x50300000, LENGTH = 1K
+  sio        (r) : ORIGIN = 0xD0000000, LENGTH = 1K
+  iobank0    (r) : ORIGIN = 0x40014000, LENGTH = 1K
+  padsbank0  (r) : ORIGIN = 0x4001c000, LENGTH = 1K
+  resets     (r) : ORIGIN = 0x4000C000, LENGTH = 1K
+  clocks     (r) : ORIGIN = 0x40008000, LENGTH = 1K
+  rsoc       (r) : ORIGIN = 0x40060000, LENGTH = 1K
+  xsoc       (r) : ORIGIN = 0x40024000, LENGTH = 1K
+  pll_sys    (r) : ORIGIN = 0x40028000, LENGTH = 1K
+  pll_usb    (r) : ORIGIN = 0x4002c000, LENGTH = 1K
+  pio_0      (r) : ORIGIN = 0x50200000, LENGTH = 1K
+  pio_1      (r) : ORIGIN = 0x50300000, LENGTH = 1K
 
   /* PIO memory registers */
   pio_0_mem (rw) : ORIGIN = 0x50200000 + 0x048, LENGTH = 1K
@@ -85,6 +86,25 @@ SECTIONS
     KEEP (*crtend.o(.dtors))
   } > flash
 
+    /* PIO memory setup */
+  .pio_0_mem :
+	{
+    _spio0 = .;
+		KEEP(*(.pio_0_mem))
+    _epio0 = .;
+	} > pio_0_mem AT> flash
+
+  _sipio0 = LOADADDR(.pio_0_mem);
+
+  .pio_1_mem :
+	{
+    _epio1 = .;
+		KEEP(*(.pio_1_mem))
+    _spio1 = .;
+	} > pio_1_mem AT> flash
+
+  _sipio1 = LOADADDR(.pio_1_mem);
+
   /* Runtime Variables */
   .data :
 	{
@@ -92,7 +112,6 @@ SECTIONS
 		*(.data*)
 		. = ALIGN(4);
 		_edata = .;
-
 	} > ram AT> flash
 
   /* used by the startup to initialize data */
@@ -116,6 +135,10 @@ SECTIONS
   .io_bank_0_regs (NOLOAD) : {
     *(.io_bank_0_regs)
   } > iobank0
+
+  .pads_bank_0_regs (NOLOAD) : {
+    *(.pads_bank_0_regs)
+  } > padsbank0
 
   .reset_regs (NOLOAD) : {
     *(.reset_regs)
@@ -148,17 +171,6 @@ SECTIONS
   .pio_1_regs (NOLOAD) : {
     *(.pio_1_regs)
   } > pio_1
-
-  /* PIO memory setup */
-  .pio_0_mem :
-	{
-		KEEP(*(.pio_0_mem))
-	} > pio_0_mem
-
-  .pio_1_mem :
-	{
-		KEEP(*(.pio_1_mem))
-	} > pio_1_mem
 };
 
 _estack = ORIGIN(ram) + LENGTH(ram); /* stack starts at end of ram */
