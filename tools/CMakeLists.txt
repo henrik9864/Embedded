@@ -1,0 +1,2 @@
+add_subdirectory(pioasm)
+add_subdirectory(elf2uf2)

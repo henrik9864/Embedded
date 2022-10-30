@@ -1,3 +1,0 @@
-/home/henrik/Documents/cpp/pioasm/build/CMakeFiles/pioasm.dir
-/home/henrik/Documents/cpp/pioasm/build/CMakeFiles/edit_cache.dir
-/home/henrik/Documents/cpp/pioasm/build/CMakeFiles/rebuild_cache.dir
