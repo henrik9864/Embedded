@@ -6,6 +6,7 @@
 
 namespace hal
 {
+    // TODO: Mabye move into hal class?
     void put(const uint32_t a1, const uint32_t a2)
     {
         *reinterpret_cast<uint32_t*>(a1) = a2;
@@ -23,4 +24,10 @@ namespace hal
             __asm("NOP");
         }
     }
+
+    class system
+    {
+    public:
+        static void init();
+    };
 }

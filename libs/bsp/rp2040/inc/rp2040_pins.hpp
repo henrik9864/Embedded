@@ -6,9 +6,25 @@
 using namespace bsp::rp2040;
 using namespace hal::pins;
 
-void gpio::setupPin(const pin_id&& pin, const pindir&& dir)
+enum class hal::pins::pinfunc : uint32_t
 {
-	s_io_bank_0.gpio[pin].control.funcsel = 5; // Set func mode to SIO
+	SPIO = 1,
+	UART = 2,
+	I2C = 3,
+	PWM = 4,
+	SIO = 5,
+	PIO0 = 6,
+	PIO1 = 7,
+	CLOCK = 8,
+	USB = 9
+};
+
+void gpio::setupPin(const pin_id&& pin, const pindir&& dir, const pinfunc&& func)
+{
+	s_io_bank_0.gpio[pin].control.funcsel = static_cast<uint32_t>(func);
+
+	if (func != pinfunc::SIO)
+		return;
 
 	if (dir == pindir::out)
 	{

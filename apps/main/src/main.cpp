@@ -85,16 +85,6 @@ void init_pll_usb(const uint32_t div, const uint32_t fbdiv, const uint32_t postd
     bsp::rp2040::s_pll_usb.pwr.postdivpd = 0x0;
 }
 
-void init_gpio()
-{
-    bsp::rp2040::s_resets.reset.io_bank_0 = 1;
-    bsp::rp2040::s_resets.reset.pads_bank_0 = 1;
-
-    bsp::rp2040::s_resets.reset.io_bank_0 = 0;
-    bsp::rp2040::s_resets.reset.pads_bank_0 = 0;
-    while (!bsp::rp2040::s_resets.reset_done.io_bank_0 || !bsp::rp2040::s_resets.reset_done.pads_bank_0) {}
-}
-
 void setup_clocks()
 {
     // Disable resus that my have been enabled.
@@ -146,9 +136,8 @@ void setup_sm0()
 
 int main(void)
 {
-    bsp::rp2040::s_resets.reset.pio_0 = 0;
-    bsp::rp2040::s_resets.reset.pads_bank_0 = 0;
-    while (!bsp::rp2040::s_resets.reset_done.pio_0 && !bsp::rp2040::s_resets.reset_done.pads_bank_0) {}
+    // Reset system to clean state
+    system::init();
 
     //init_xsoc();
 
@@ -164,26 +153,21 @@ int main(void)
 
     //setup_clocks();
 
-    init_gpio();
-
     //const uint32_t WS28Pin = 16;
     const uint32_t WS28Pin = 14;
     const uint32_t LedPin2 = 14;
     const uint32_t LedPin = 8;
 
     // Setup pin 16 and 25(WS2812B and LED) as out
-    gpio::setupPin(std::move(LedPin), pindir::out);
-    gpio::setupPin(25, pindir::out);
+    gpio::setupPin(std::move(LedPin), pindir::out, pinfunc::SIO);
+    gpio::setupPin(25, pindir::out, pinfunc::SIO);
 
-    bsp::rp2040::s_io_bank_0.gpio[LedPin2].control.funcsel = 6; // Set func mode to PIO0
-    //s_sio.gpio_oe_set = 1 << LedPin2;
+    // Setup LedPin2 and WS28Pin as pio out pins.
+    //gpio::setupPin(std::move(LedPin2), pindir::out, pinfunc::PIO0);
+    gpio::setupPin(std::move(WS28Pin), pindir::out, pinfunc::PIO0);
 
-    //s_pads_bank_0.gpio[WS28Pin].od = false;
-    bsp::rp2040::s_io_bank_0.gpio[WS28Pin].control.funcsel = 6; // Set func mode to PIO0
-    //s_io_bank_0.gpio[WS28Pin].control.outover = 0x3;
-
-    // Set pin 25(LED) as out
-    bsp::rp2040::s_sio.gpio_out_set = 1 << 25;
+    // Setup LedPin2 as PWM
+    gpio::setupPin(std::move(LedPin2), pindir::out, pinfunc::PWM);
 
     const std::array<uint32_t, 24> arr = { 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
     //const std::array<uint32_t, 24> arr = { 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
