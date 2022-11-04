@@ -377,6 +377,7 @@ namespace bsp::rp2040
                     uint32_t irqtoproc : 1;
                 };
             } status;
+
             union {
                 uint32_t : 32;
                 union {
@@ -425,6 +426,7 @@ namespace bsp::rp2040
                 uint32_t usbctrl : 1;
             };
         } reset;
+
         union {
             uint32_t : 32;
             struct {
@@ -455,6 +457,7 @@ namespace bsp::rp2040
                 uint32_t usbctrl : 1;
             };
         } wdsel;
+
         union {
             uint32_t : 32;
             struct {
@@ -918,7 +921,7 @@ namespace bsp::rp2040
         union
         {
             uint32_t : 32;
-            union
+            struct
             {
                 uint32_t voltage_select : 1;
             };
@@ -927,7 +930,7 @@ namespace bsp::rp2040
         union
         {
             uint32_t : 32;
-            union
+            struct
             {
                 uint32_t slewfast : 1;
                 uint32_t schmitt : 1;
@@ -942,7 +945,7 @@ namespace bsp::rp2040
         union
         {
             uint32_t : 32;
-            union
+            struct
             {
                 uint32_t slewfast : 1;
                 uint32_t schmitt : 1;
@@ -957,7 +960,7 @@ namespace bsp::rp2040
         union
         {
             uint32_t : 32;
-            union
+            struct
             {
                 uint32_t slewfast : 1;
                 uint32_t schmitt : 1;
@@ -968,6 +971,146 @@ namespace bsp::rp2040
                 uint32_t od : 1;
             };
         } swd;
+    };
+
+    struct PWM
+    {
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t en : 1;
+                    uint32_t ph_correct : 1;
+                    uint32_t a_inv : 1;
+                    uint32_t b_inv : 1;
+                    uint32_t divmode : 2;
+                    uint32_t ph_ret : 1;
+                    uint32_t ph_adv : 1;
+                };
+            } csr;
+
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t frac : 4;
+                    uint32_t integer : 8;
+                };
+            } div;
+
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t ctr : 16;
+                };
+            };
+
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t a : 16;
+                    uint32_t b : 16;
+                };
+            } cc;
+
+
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t counter_wrap : 16;
+                };
+            } top;
+        } ch[8];
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t ch0 : 1;
+                uint32_t ch1 : 1;
+                uint32_t ch2 : 1;
+                uint32_t ch3 : 1;
+                uint32_t ch4 : 1;
+                uint32_t ch5 : 1;
+                uint32_t ch6 : 1;
+                uint32_t ch7 : 1;
+            };
+        } en;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t ch0 : 1;
+                uint32_t ch1 : 1;
+                uint32_t ch2 : 1;
+                uint32_t ch3 : 1;
+                uint32_t ch4 : 1;
+                uint32_t ch5 : 1;
+                uint32_t ch6 : 1;
+                uint32_t ch7 : 1;
+            };
+        } intr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t ch0 : 1;
+                uint32_t ch1 : 1;
+                uint32_t ch2 : 1;
+                uint32_t ch3 : 1;
+                uint32_t ch4 : 1;
+                uint32_t ch5 : 1;
+                uint32_t ch6 : 1;
+                uint32_t ch7 : 1;
+            };
+        } inte;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t ch0 : 1;
+                uint32_t ch1 : 1;
+                uint32_t ch2 : 1;
+                uint32_t ch3 : 1;
+                uint32_t ch4 : 1;
+                uint32_t ch5 : 1;
+                uint32_t ch6 : 1;
+                uint32_t ch7 : 1;
+            };
+        } intf;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t ch0 : 1;
+                uint32_t ch1 : 1;
+                uint32_t ch2 : 1;
+                uint32_t ch3 : 1;
+                uint32_t ch4 : 1;
+                uint32_t ch5 : 1;
+                uint32_t ch6 : 1;
+                uint32_t ch7 : 1;
+            };
+        } ints;
     };
 
     volatile SIO s_sio __attribute__((section(".sio_regs")));
@@ -981,4 +1124,5 @@ namespace bsp::rp2040
     volatile PLL s_pll_usb __attribute__((section(".pll_usb_regs")));
     volatile PIO s_pio_0 __attribute__((section(".pio_0_regs")));
     volatile PIO s_pio_1 __attribute__((section(".pio_1_regs")));
+    volatile PWM s_pwm __attribute__((section(".pwm_regs")));
 }

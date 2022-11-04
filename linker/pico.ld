@@ -19,6 +19,7 @@ MEMORY
   pll_usb    (r) : ORIGIN = 0x4002c000, LENGTH = 1K
   pio_0      (r) : ORIGIN = 0x50200000, LENGTH = 1K
   pio_1      (r) : ORIGIN = 0x50300000, LENGTH = 1K
+  pwm        (r) : ORIGIN = 0x40050000, LENGTH = 1K
 
   /* PIO memory registers */
   pio_0_mem (rw) : ORIGIN = 0x50200000 + 0x048, LENGTH = 1K
@@ -171,6 +172,10 @@ SECTIONS
   .pio_1_regs (NOLOAD) : {
     *(.pio_1_regs)
   } > pio_1
+
+  .pwm_regs (NOLOAD) : {
+    *(.pwm_regs)
+  } > pwm
 };
 
 _estack = ORIGIN(ram) + LENGTH(ram); /* stack starts at end of ram */

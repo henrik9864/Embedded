@@ -158,9 +158,21 @@ int main(void)
     const uint32_t LedPin2 = 14;
     const uint32_t LedPin = 8;
 
+    const uint32_t StepperC0 = 3;
+    const uint32_t StepperC1 = 4;
+    const uint32_t StepperC2 = 5;
+    const uint32_t StepperC3 = 6;
+
     // Setup pin 16 and 25(WS2812B and LED) as out
     gpio::setupPin(std::move(LedPin), pindir::out, pinfunc::SIO);
     gpio::setupPin(25, pindir::out, pinfunc::SIO);
+
+    // Setup stepper pins as out
+    gpio::setupPin(std::move(StepperC0), pindir::out, pinfunc::SIO);
+    gpio::setupPin(std::move(StepperC1), pindir::out, pinfunc::SIO);
+    gpio::setupPin(std::move(StepperC2), pindir::out, pinfunc::SIO);
+    gpio::setupPin(std::move(StepperC3), pindir::out, pinfunc::SIO);
+
 
     // Setup LedPin2 and WS28Pin as pio out pins.
     //gpio::setupPin(std::move(LedPin2), pindir::out, pinfunc::PIO0);
@@ -168,6 +180,7 @@ int main(void)
 
     // Setup LedPin2 as PWM
     gpio::setupPin(std::move(LedPin2), pindir::out, pinfunc::PWM);
+    pwm::enable(std::move(LedPin2));
 
     const std::array<uint32_t, 24> arr = { 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
     //const std::array<uint32_t, 24> arr = { 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
@@ -176,9 +189,57 @@ int main(void)
     setup_sm0();
 
     // Enable PIO 0
-    bsp::rp2040::s_pio_0.control.sm_enable = 15;
+    bsp::rp2040::s_pio_0.control.sm_enable = 15; // Enable all cores!!!!
 
-    // Blink
+    // Registry check
+    if (reinterpret_cast<uint32_t>(&s_pwm.ints) != 0x40050000 + 0xb0)
+        return 0;
+
+    const uint32_t spd = 4;
+
+    while (true)
+    {
+        gpio::writePin(std::move(StepperC0), 1);
+        gpio::writePin(std::move(StepperC1), 0);
+        gpio::writePin(std::move(StepperC2), 1);
+        gpio::writePin(std::move(StepperC3), 0);
+
+        delay(1000 / spd);
+
+        gpio::writePin(std::move(StepperC0), 0);
+        gpio::writePin(std::move(StepperC1), 1);
+        gpio::writePin(std::move(StepperC2), 1);
+        gpio::writePin(std::move(StepperC3), 0);
+
+        delay(1000 / spd);
+
+        gpio::writePin(std::move(StepperC0), 0);
+        gpio::writePin(std::move(StepperC1), 1);
+        gpio::writePin(std::move(StepperC2), 0);
+        gpio::writePin(std::move(StepperC3), 1);
+
+        delay(1000 / spd);
+
+        gpio::writePin(std::move(StepperC0), 1);
+        gpio::writePin(std::move(StepperC1), 0);
+        gpio::writePin(std::move(StepperC2), 0);
+        gpio::writePin(std::move(StepperC3), 1);
+
+        delay(1000 / spd);
+    }
+    
+
+    // PWM
+    while (true)
+    {
+        for(auto rb = 0x0000; rb < 0x10000; rb++)
+        {
+            pwm::writeCompare(std::move(LedPin2), rb);
+            delay(0x10 / 2);
+        }
+    }
+
+    // Blink 182
     while (true)
     {
         gpio::togglePin(std::move(LedPin));
@@ -187,7 +248,7 @@ int main(void)
         gpio::togglePin(std::move(LedPin));
         delay(100000);
     }
-    return(0);
+    return 0;
 }
 
 /*

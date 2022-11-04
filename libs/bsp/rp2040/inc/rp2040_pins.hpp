@@ -1,6 +1,5 @@
 #pragma once
 
-#include "rp2040_regs.hpp"
 #include "pins.hpp"
 
 using namespace bsp::rp2040;
