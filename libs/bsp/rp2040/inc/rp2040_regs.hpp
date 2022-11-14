@@ -1113,6 +1113,598 @@ namespace bsp::rp2040
         } ints;
     };
 
+    struct I2C
+    {
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t master_mode : 1;
+                    uint32_t speed : 2;
+                    uint32_t slave_10_bit_addr : 1;
+                    uint32_t master_10_bit_addr : 1;
+                    uint32_t restart_en : 1;
+                    uint32_t slave_disable : 1;
+                    uint32_t stop_det_if_addressed : 1;
+                    uint32_t tx_empty_ctrl : 1;
+                    uint32_t rx_fifo_full_hld_ctrl : 1;
+                    uint32_t stop_det_if_master_active : 1;
+                };
+            };
+        } control;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t tar : 10;
+                    uint32_t gc_or_start : 1;
+                    uint32_t special : 1;
+                };
+            };
+        } tar;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t sar : 10;
+                };
+            };
+        } sar;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t dat : 8;
+                    uint32_t cmd : 1;
+                    uint32_t stop : 1;
+                    uint32_t restart : 1;
+                    uint32_t first_data_byte : 1;
+                };
+            };
+        } data_cmd;
+
+        struct
+        {
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t scl_hcnt : 16;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t scl_lcnt : 16;
+                    };
+                };
+            };
+        } ss;
+
+        struct
+        {
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t scl_hcnt : 16;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t scl_lcnt : 16;
+                    };
+                };
+            };
+        } fs;
+
+        struct
+        {
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t rx_under : 1;
+                        uint32_t rx_over : 1;
+                        uint32_t rx_full : 1;
+                        uint32_t tx_over : 1;
+                        uint32_t tx_empty : 1;
+                        uint32_t rd_req : 1;
+                        uint32_t tx_abrt : 1;
+                        uint32_t rx_done : 1;
+                        uint32_t activity : 1;
+                        uint32_t stop_det : 1;
+                        uint32_t start_det : 1;
+                        uint32_t gen_call : 1;
+                        uint32_t restart_det : 1;
+                    };
+                };
+            } status;
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t rx_under : 1;
+                        uint32_t rx_over : 1;
+                        uint32_t rx_full : 1;
+                        uint32_t tx_over : 1;
+                        uint32_t tx_empty : 1;
+                        uint32_t rd_req : 1;
+                        uint32_t tx_abrt : 1;
+                        uint32_t rx_done : 1;
+                        uint32_t activity : 1;
+                        uint32_t stop_det : 1;
+                        uint32_t start_det : 1;
+                        uint32_t gen_call : 1;
+                        uint32_t restart_det : 1;
+                    };
+                };
+            } mask;
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t rx_under : 1;
+                        uint32_t rx_over : 1;
+                        uint32_t rx_full : 1;
+                        uint32_t tx_over : 1;
+                        uint32_t tx_empty : 1;
+                        uint32_t rd_req : 1;
+                        uint32_t tx_abrt : 1;
+                        uint32_t rx_done : 1;
+                        uint32_t activity : 1;
+                        uint32_t stop_det : 1;
+                        uint32_t start_det : 1;
+                        uint32_t gen_call : 1;
+                        uint32_t restart_det : 1;
+                    };
+                };
+            } raw_mask;
+        } interupt;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t rx_tl : 8;
+                };
+            };
+        };
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t tx_tl : 8;
+                };
+            };
+        };
+
+        struct
+        {
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t interupt : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t rx_under : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t rx_over : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t tx_over : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t rd_req : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t tx_abrt : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t rx_done : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t activity : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t stop_det : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t start_det : 1;
+                    };
+                };
+            };
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t gen_call : 1;
+                    };
+                };
+            };
+        } clr;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t enable : 1;
+                    uint32_t abort : 1;
+                    uint32_t tx_cmd_block : 1;
+                };
+            };
+        } enable;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t activity : 1;
+                    uint32_t tfnf : 1;
+                    uint32_t tfe : 1;
+                    uint32_t rfne : 1;
+                    uint32_t rff : 1;
+                    uint32_t mst_activity : 1;
+                    uint32_t slv_activity : 1;
+                };
+            };
+        } status;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t txflr : 5;
+                };
+            };
+        };
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t rxflr : 5;
+                };
+            };
+        };
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t tx : 16;
+                    uint32_t rx : 8;
+                };
+            };
+        } sda_hold;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t abrt_7b_addr_noack : 1;
+                    uint32_t abrt_10addr1_noack : 1;
+                    uint32_t abrt_10addr2_noack : 1;
+                    uint32_t abrt_txdata_noack : 1;
+                    uint32_t abrt_gcall_noack : 1;
+                    uint32_t abrt_gcall_read : 1;
+                    uint32_t abrt_hs_ackdet : 1;
+                    uint32_t abrt_sbyte_ackdet : 1;
+                    uint32_t abrt_hs_norstr : 1;
+                    uint32_t abrt_sbyte_norstr : 1;
+                    uint32_t abrt_10b_rd_norstr : 1;
+                    uint32_t abrt_master_dis : 1;
+                    uint32_t abrt_lost : 1;
+                    uint32_t abrt_slvflush_txfifo : 1;
+                    uint32_t abrt_slv_arblost : 1;
+                    uint32_t abrt_slvrd_intx : 1;
+                    uint32_t abrt_user_abrt : 1;
+                    uint32_t : 6;
+                    uint32_t tx_flush_cnt : 9;
+                };
+            };
+        } tx_abrt_source;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t nack : 1;
+                };
+            };
+        } slv_data_nack_only;
+
+        struct
+        {
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t rdmae : 1;
+                        uint32_t tdmae : 1;
+                    };
+                };
+            } cr;
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t dmatdl : 4;
+                    };
+                };
+            } tdlr;
+
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t dmardl : 4;
+                    };
+                };
+            } rdlr;
+        } dma;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t sda_setup : 8;
+                };
+            };
+        };
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t ack_general_call : 1;
+                };
+            };
+        };
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t en : 1;
+                    uint32_t slv_disabled_while_busy : 1;
+                    uint32_t slv_rx_data_lost : 1;
+                };
+            };
+        } enable_status;
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t fs_spklen : 8;
+                };
+            };
+        };
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t clr_restart_det : 8;
+                };
+            };
+        };
+
+        struct
+        {
+            struct
+            {
+                union
+                {
+                    uint32_t : 32;
+                    struct
+                    {
+                        uint32_t apb_data_width : 2;
+                        uint32_t max_speed_mode : 2;
+                        uint32_t hc_count_values : 1;
+                        uint32_t inter_io : 1;
+                        uint32_t has_dma : 1;
+                        uint32_t add_encoded_params : 1;
+                        uint32_t rx_buffer_depth : 8;
+                        uint32_t tx_buffer_depth : 8;
+                    };
+                };
+            } param_1;
+
+            uint32_t version;
+            uint32_t type;
+        } comp;
+    };
+
     volatile SIO s_sio __attribute__((section(".sio_regs")));
     volatile IO_BANK_0 s_io_bank_0 __attribute__((section(".io_bank_0_regs")));
     volatile PADS_BANK_0 s_pads_bank_0 __attribute__((section(".pads_bank_0_regs")));
@@ -1125,4 +1717,6 @@ namespace bsp::rp2040
     volatile PIO s_pio_0 __attribute__((section(".pio_0_regs")));
     volatile PIO s_pio_1 __attribute__((section(".pio_1_regs")));
     volatile PWM s_pwm __attribute__((section(".pwm_regs")));
+    volatile I2C s_i2c_0 __attribute__((section(".i2c_0_regs")));
+    volatile I2C s_i2c_1 __attribute__((section(".i2c_1_regs")));
 }
