@@ -3,10 +3,12 @@
 #include <array>
 
 #include "hal.hpp"
+#include "ln298n.hpp"
 #include "rp2040.hpp"
 
 using namespace hal;
 using namespace hal::pins;
+//using namespace drivers;
 
 const uint32_t freq_200mhz = 200 * 1000000;
 const uint32_t freq_133mhz = 133 * 1000000;
@@ -26,14 +28,6 @@ const uint32_t freq = freq_48mhz;
 void sleep(const uint32_t ns)
 {
     hal::delay((ns / 1000000000) * freq);
-}
-
-void blink()
-{
-    bsp::rp2040::s_sio.gpio_out_set = 1 << 25;
-    hal::delay(freq);
-
-    bsp::rp2040::s_sio.gpio_out_clr = 1 << 25;
 }
 
 void init_xsoc()
@@ -241,9 +235,16 @@ int main(void)
     gpio::setupPin(std::move(LedPin2), pindir::out, pinfunc::SIO);
     gpio::setupPin(25, pindir::out, pinfunc::SIO);
 
+    gpio::setupPin(15, pindir::in, pinfunc::SIO);
+
     // Setup stepper pins as out
     gpio::setupPin(std::move(StepperC0), pindir::out, pinfunc::SIO);
     gpio::setupPin(std::move(StepperC1), pindir::out, pinfunc::SIO);
+    gpio::setupPin(std::move(StepperC2), pindir::out, pinfunc::SIO);
+    gpio::setupPin(std::move(StepperC3), pindir::out, pinfunc::SIO);
+
+    // Setup stepper driver
+    drivers::LN298NDrivers driver(StepperC0, StepperC1, StepperC2, StepperC3);
 
     // Setup I2C pins
     gpio::setupPin(std::move(0), pindir::out, pinfunc::I2C);
@@ -282,18 +283,6 @@ int main(void)
     const uint32_t spd = 6;
 
     //step(200, StepperC0, StepperC1, StepperC2, StepperC3);
-
-
-    while (true)
-    {
-        //gpio::togglePin(std::move(LedPin));
-        s_i2c_0.data_cmd.dat = 255;
-
-        while (!s_i2c_0.interupt.raw_mask.tx_empty) {};
-
-
-        //gpio::togglePin(std::move(LedPin2));
-    }
     
 
     while (true)
@@ -304,32 +293,7 @@ int main(void)
             continue;
         }
 
-        gpio::writePin(std::move(StepperC0), 1);
-        gpio::writePin(std::move(StepperC1), 0);
-        gpio::writePin(std::move(StepperC2), 1);
-        gpio::writePin(std::move(StepperC3), 0);
-
-        delay(1000 / spd);
-
-        gpio::writePin(std::move(StepperC0), 0);
-        gpio::writePin(std::move(StepperC1), 1);
-        gpio::writePin(std::move(StepperC2), 1);
-        gpio::writePin(std::move(StepperC3), 0);
-
-        delay(1000 / spd);
-
-        gpio::writePin(std::move(StepperC0), 0);
-        gpio::writePin(std::move(StepperC1), 1);
-        gpio::writePin(std::move(StepperC2), 0);
-        gpio::writePin(std::move(StepperC3), 1);
-
-        delay(1000 / spd);
-
-        gpio::writePin(std::move(StepperC0), 1);
-        gpio::writePin(std::move(StepperC1), 0);
-        gpio::writePin(std::move(StepperC2), 0);
-        gpio::writePin(std::move(StepperC3), 1);
-
+        driver.stepForward();
         delay(1000 / spd);
     }
     
