@@ -10,10 +10,10 @@ using namespace hal::pins;
 
 namespace drivers
 {
-	class LN298NDrivers
+	class LN298NDriver
 	{
 	public:
-		LN298NDrivers(const uint32_t p1, const uint32_t p2, const uint32_t p3, const uint32_t p4);
+		LN298NDriver(const uint32_t p1, const uint32_t p2, const uint32_t p3, const uint32_t p4);
 
 		void stepForward();
 		void stepForward(const uint32_t steps, const uint32_t delay);
@@ -32,7 +32,7 @@ namespace drivers
 		void preformStep(const uint16_t step);
 	};
 
-	LN298NDrivers::LN298NDrivers(const uint32_t p1, const uint32_t p2, const uint32_t p3, const uint32_t p4)
+	LN298NDriver::LN298NDriver(const uint32_t p1, const uint32_t p2, const uint32_t p3, const uint32_t p4)
 		: m_p1(p1)
 		, m_p2(p2)
 		, m_p3(p3)
@@ -41,7 +41,7 @@ namespace drivers
 
 	}
 
-	void LN298NDrivers::stepForward()
+	void LN298NDriver::stepForward()
 	{
 		if (m_Step++ > 3)
 			m_Step = 0;
@@ -49,7 +49,7 @@ namespace drivers
 		preformStep(m_Step);
 	}
 
-	void LN298NDrivers::stepForward(uint32_t steps, const uint32_t delay)
+	void LN298NDriver::stepForward(uint32_t steps, const uint32_t delay)
 	{
 		do
 		{
@@ -58,7 +58,7 @@ namespace drivers
 		} while (steps-- >= 0);
 	}
 
-	void LN298NDrivers::stepBackward()
+	void LN298NDriver::stepBackward()
 	{
 		if (m_Step-- < 0)
 			m_Step = 3;
@@ -66,7 +66,7 @@ namespace drivers
 		preformStep(m_Step);
 	}
 
-	void LN298NDrivers::stepBackward(uint32_t steps, const uint32_t delay)
+	void LN298NDriver::stepBackward(uint32_t steps, const uint32_t delay)
 	{
 		do
 		{
@@ -75,7 +75,7 @@ namespace drivers
 		} while (steps-- >= 0);
 	}
 
-	void LN298NDrivers::preformStep(const uint16_t step)
+	void LN298NDriver::preformStep(const uint16_t step)
 	{
 		switch (step)
 		{

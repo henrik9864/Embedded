@@ -244,7 +244,7 @@ int main(void)
     gpio::setupPin(std::move(StepperC3), pindir::out, pinfunc::SIO);
 
     // Setup stepper driver
-    drivers::LN298NDrivers driver(StepperC0, StepperC1, StepperC2, StepperC3);
+    drivers::LN298NDriver driver(StepperC0, StepperC1, StepperC2, StepperC3);
 
     // Setup I2C pins
     gpio::setupPin(std::move(0), pindir::out, pinfunc::I2C);
@@ -259,7 +259,7 @@ int main(void)
     //gpio::setupPin(std::move(LedPin2), pindir::out, pinfunc::PWM);
     //pwm::enable(std::move(LedPin2));
 
-    const std::array<uint32_t, 24> arr = { 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
+    //const std::array<uint32_t, 24> arr = { 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
     //const std::array<uint32_t, 24> arr = { 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
 
     setup_pio();
