@@ -19,7 +19,8 @@ namespace hal
 
     volatile void delay(const uint32_t a1)
     {
-        for (size_t i = 0; i < a1; i++)
+        const uint32_t da1 = a1 / 14;
+        for (size_t i = 0; i < da1; i++)
         {
             __asm("NOP");
         }

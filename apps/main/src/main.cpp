@@ -21,7 +21,6 @@ const uint32_t freq_6mhz = 6.5 * 1000000;
 const uint32_t freq_1_15mhz = 1.15 * 1000000;
 const uint32_t freq_1mhz = 1 * 1000000;
 const uint32_t freq_100khz = 100000;
-const uint32_t freq_noe = 0x10000000;
 
 const uint32_t freq = freq_48mhz;
 
@@ -118,6 +117,7 @@ void setup_clocks()
 
     bsp::rp2040::s_clocks.sys.control.src = 0x1; // Set sys src to pll_sys
     bsp::rp2040::s_clocks.sys.control.auxsrc = 0x0; // Set sys auxsrc to pll_sys
+    bsp::rp2040::s_clocks.sys.div.integer = 0x1; // Reset div
 
     bsp::rp2040::s_clocks.peripheral.control.enable = 0x1; // Enable peri clock
     bsp::rp2040::s_clocks.peripheral.control.auxsrc = 0x0; // Set auxsrc to clk_sys
@@ -204,12 +204,12 @@ int main(void)
     // Reset system to clean state
     system::init();
 
-    init_i2c(100 * 1000);
+    //init_i2c(100 * 1000);
 
     init_xsoc();
 
     // Setup SYS PLL for 12 MHz * 133 / 6 / 2 = 133 MHz
-    init_pll_sys(1, 133, 6, 2);
+    //init_pll_sys(1, 133, 6, 2);
     //init_pll_sys(1, 100, 6, 1);
     
     // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
@@ -278,13 +278,21 @@ int main(void)
     if (reinterpret_cast<uint32_t>(&s_i2c_0.sar) != 0x40044000 + 0x08)
         return 0;
 
-    gpio::togglePin(std::move(LedPin));
+    //gpio::togglePin(std::move(LedPin));
 
-    const uint32_t spd = 6;
+    //const uint32_t spd = freq_12mhz / 4;
+    const uint32_t spd = 1;
 
     //step(200, StepperC0, StepperC1, StepperC2, StepperC3);
     
+    while (true)
+    {
+        gpio::togglePin(std::move(LedPin));
+        delay(freq_48mhz);
+    }
+    
 
+    // Stepper motor
     while (true)
     {
         if (!gpio::readPin(15))
@@ -293,8 +301,10 @@ int main(void)
             continue;
         }
 
+        gpio::togglePin(std::move(LedPin));
+
         driver.stepForward();
-        delay(1000 / spd);
+        delay(1000 /  spd);
     }
     
 

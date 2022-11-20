@@ -84,21 +84,25 @@ namespace drivers
 			gpio::writePin(std::move(m_p2), 0);
 			gpio::writePin(std::move(m_p3), 1);
 			gpio::writePin(std::move(m_p4), 0);
+			break;
 		case 1:
 			gpio::writePin(std::move(m_p1), 0);
 			gpio::writePin(std::move(m_p2), 1);
 			gpio::writePin(std::move(m_p3), 1);
 			gpio::writePin(std::move(m_p4), 0);
+			break;
 		case 2:
 			gpio::writePin(std::move(m_p1), 0);
 			gpio::writePin(std::move(m_p2), 1);
 			gpio::writePin(std::move(m_p3), 0);
 			gpio::writePin(std::move(m_p4), 1);
+			break;
 		case 3:
 			gpio::writePin(std::move(m_p1), 1);
 			gpio::writePin(std::move(m_p2), 0);
 			gpio::writePin(std::move(m_p3), 0);
 			gpio::writePin(std::move(m_p4), 1);
+			break;
 		default:
 			break;
 		}
