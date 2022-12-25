@@ -1732,6 +1732,11 @@ namespace bsp::rp2040
             };
         } rsr;
 
+        uint32_t : 32;
+        uint32_t : 32;
+        uint32_t : 32;
+        uint32_t : 32;
+
         union
         {
             uint32_t : 32;
@@ -1748,6 +1753,8 @@ namespace bsp::rp2040
                 uint32_t ri : 1;
             };
         } fr;
+
+        uint32_t : 32;
 
         union
         {
@@ -1981,7 +1988,7 @@ namespace bsp::rp2040
             {
                 uint32_t uartpcellid3 : 8;
             };
-        };
+        } u;
     };
 
     extern volatile SIO s_sio;

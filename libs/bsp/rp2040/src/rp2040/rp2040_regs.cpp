@@ -16,6 +16,6 @@ namespace bsp::rp2040
     volatile PWM s_pwm __attribute__((section(".pwm_regs")));
     volatile I2C s_i2c_0 __attribute__((section(".i2c_0_regs")));
     volatile I2C s_i2c_1 __attribute__((section(".i2c_1_regs")));
-    volatile Uart s_uart_0 __attribute__((section(".uart_1_regs")));
+    volatile Uart s_uart_0 __attribute__((section(".uart_0_regs")));
     volatile Uart s_uart_1 __attribute__((section(".uart_1_regs")));
 }
