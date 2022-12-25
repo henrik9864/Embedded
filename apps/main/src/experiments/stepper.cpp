@@ -1,8 +1,8 @@
 #include "experiments/stepper.hpp"
 
 using namespace hal;
+using namespace hal::pins;
 
-/*
 void stepperMain()
 {
     // Setup led pin
@@ -24,14 +24,13 @@ void stepperMain()
     {
         if (!gpio::readPin(15))
         {
-            delay(1000 / spd);
+            system::delay(1000 / spd);
             continue;
         }
 
         gpio::togglePin(std::move(LedPin));
 
         driver.stepForward();
-        delay(1000 / spd);
+        system::delay(1000 / spd);
     }
 }
-*/

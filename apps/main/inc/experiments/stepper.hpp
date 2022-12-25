@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-//#include "ln298n.hpp"
+#include "ln298n.hpp"
 #include "hal.hpp"
 #include "rp2040.hpp"
 
