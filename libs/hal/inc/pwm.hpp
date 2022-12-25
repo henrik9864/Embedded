@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
+#include <array>
 #include "pins.hpp"
 
 namespace hal

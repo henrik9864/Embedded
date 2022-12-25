@@ -1705,18 +1705,18 @@ namespace bsp::rp2040
         } comp;
     };
 
-    volatile SIO s_sio __attribute__((section(".sio_regs")));
-    volatile IO_BANK_0 s_io_bank_0 __attribute__((section(".io_bank_0_regs")));
-    volatile PADS_BANK_0 s_pads_bank_0 __attribute__((section(".pads_bank_0_regs")));
-    volatile RESETS s_resets __attribute__((section(".reset_regs")));
-    volatile Clocks s_clocks __attribute__((section(".clock_regs")));
-    volatile RSOC s_rsoc __attribute__((section(".rsoc_regs")));
-    volatile XSOC s_xsoc __attribute__((section(".xsoc_regs")));
-    volatile PLL s_pll_sys __attribute__((section(".pll_sys_regs")));
-    volatile PLL s_pll_usb __attribute__((section(".pll_usb_regs")));
-    volatile PIO s_pio_0 __attribute__((section(".pio_0_regs")));
-    volatile PIO s_pio_1 __attribute__((section(".pio_1_regs")));
-    volatile PWM s_pwm __attribute__((section(".pwm_regs")));
-    volatile I2C s_i2c_0 __attribute__((section(".i2c_0_regs")));
-    volatile I2C s_i2c_1 __attribute__((section(".i2c_1_regs")));
+    extern volatile SIO s_sio;
+    extern volatile IO_BANK_0 s_io_bank_0;
+    extern volatile PADS_BANK_0 s_pads_bank_0;
+    extern volatile RESETS s_resets;
+    extern volatile Clocks s_clocks;
+    extern volatile RSOC s_rsoc;
+    extern volatile XSOC s_xsoc;
+    extern volatile PLL s_pll_sys;
+    extern volatile PLL s_pll_usb;
+    extern volatile PIO s_pio_0;
+    extern volatile PIO s_pio_1;
+    extern volatile PWM s_pwm;
+    extern volatile I2C s_i2c_0;
+    extern volatile I2C s_i2c_1;
 }

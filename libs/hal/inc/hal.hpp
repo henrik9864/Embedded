@@ -6,29 +6,13 @@
 
 namespace hal
 {
-    // TODO: Mabye move into hal class?
-    void put(const uint32_t a1, const uint32_t a2)
-    {
-        *reinterpret_cast<uint32_t*>(a1) = a2;
-    }
-
-    uint32_t get(const uint32_t a1)
-    {
-        return *reinterpret_cast<uint32_t*>(a1);
-    }
-
-    volatile void delay(const uint32_t a1)
-    {
-        const uint32_t da1 = a1 / 14;
-        for (size_t i = 0; i < da1; i++)
-        {
-            __asm("NOP");
-        }
-    }
-
     class system
     {
     public:
         static void init();
+
+        static void put(const uint32_t a1, const uint32_t a2);
+        static uint32_t get(const uint32_t a1);
+        static volatile void delay(const uint32_t a1);
     };
 }

@@ -3,7 +3,7 @@
 #include <array>
 
 #include "hal.hpp"
-#include "ln298n.hpp"
+//#include "ln298n.hpp"
 #include "rp2040.hpp"
 
 using namespace hal;
@@ -26,7 +26,7 @@ const uint32_t freq = freq_48mhz;
 
 void sleep(const uint32_t ns)
 {
-    hal::delay((ns / 1000000000) * freq);
+    hal::system::delay((ns / 1000000000) * freq);
 }
 
 void init_xsoc()
@@ -78,36 +78,6 @@ void init_pll_usb(const uint32_t div, const uint32_t fbdiv, const uint32_t postd
     bsp::rp2040::s_pll_usb.pwr.postdivpd = 0x0;
 }
 
-void init_i2c(const uint32_t baudrate)
-{
-    // Disable i2c
-    s_i2c_0.enable.enable = 0x0;
-
-    s_i2c_0.control.speed = 0x2;         // Set spped to fast
-    s_i2c_0.control.master_mode = 0x1;   // Enable master mode
-    s_i2c_0.control.slave_disable = 0x1; // Disable slave mode
-    s_i2c_0.control.restart_en = 0x1;    // Enable master restart
-    s_i2c_0.control.tx_empty_ctrl = 0x1;
-
-    // Set FIFO watermarks to 1 to make things simpler. This is encoded by a register value of 0.
-    s_i2c_0.tx_tl = 0x0;
-    s_i2c_0.rx_tl = 0x0;
-
-    uint32_t period = (freq_133mhz + baudrate / 2) / baudrate;
-    uint32_t lcnt = period * 3 / 5; // oof this one hurts
-    uint32_t hcnt = period - lcnt;
-
-    // Mathy stuff to figure out baudrate
-    s_i2c_0.fs.scl_hcnt = hcnt;
-    s_i2c_0.fs.scl_lcnt = lcnt;
-    s_i2c_0.fs_spklen = lcnt < 16 ? 1 : lcnt / 16;
-    s_i2c_0.sda_hold.tx = ((freq_133mhz * 3) / 10000000) + 1;
-
-    s_i2c_0.tar.tar = 0x76; // Set devide id to 0x076;
-
-    s_i2c_0.enable.enable = 0x1;
-}
-
 void setup_clocks()
 {
     // Disable resus that my have been enabled.
@@ -133,80 +103,14 @@ void setup_clocks()
     bsp::rp2040::s_clocks.rtc.control.auxsrc = 0x3; // Set rtc clk src to xsoc
 }
 
-void setup_pio()
-{
-    // Reset state machines
-    //s_pio_0.control.sm_restart = 0x1;
-    //s_pio_0.control.clkdiv_restart = 0x1;
-
-    //s_pio_0.fdebug.rxstall = 0x0;
-    //s_pio_0.fdebug.rxunder = 0x0;
-    //s_pio_0.fdebug.txover = 0x0;
-    //s_pio_0.fdebug.txstall = 0x0;
-
-    // Load blink PIO program
-    bsp::rp2040::s_pio_0.instr_mem[0] = 0xe081;
-    bsp::rp2040::s_pio_0.instr_mem[1] = 0xfe01;
-    bsp::rp2040::s_pio_0.instr_mem[2] = 0xfd00;
-    bsp::rp2040::s_pio_0.instr_mem[3] = 0x0001;
-}
-
-void setup_sm0()
-{
-    bsp::rp2040::s_pio_0.sm[0].clkdiv.integer = 0xFFFF;
-    bsp::rp2040::s_pio_0.sm[0].pinctrl.set_count = 1;
-    bsp::rp2040::s_pio_0.sm[0].pinctrl.set_base = 14;
-}
-
-void step(uint32_t steps, uint32_t StepperC0, uint32_t StepperC1, uint32_t StepperC2, uint32_t StepperC3)
-{
-    uint32_t spd = 5;
-
-    for (size_t i = 0; i < steps; i++)
-    {
-        switch (i % 4)
-        {
-        case 0:
-            gpio::writePin(std::move(StepperC0), 1);
-            gpio::writePin(std::move(StepperC1), 0);
-            gpio::writePin(std::move(StepperC2), 1);
-            gpio::writePin(std::move(StepperC3), 0);
-            break;
-        case 1:
-            gpio::writePin(std::move(StepperC0), 0);
-            gpio::writePin(std::move(StepperC1), 1);
-            gpio::writePin(std::move(StepperC2), 1);
-            gpio::writePin(std::move(StepperC3), 0);
-            break;
-        case 2:
-            gpio::writePin(std::move(StepperC0), 0);
-            gpio::writePin(std::move(StepperC1), 1);
-            gpio::writePin(std::move(StepperC2), 0);
-            gpio::writePin(std::move(StepperC3), 1);
-            break;
-        case 3:
-            gpio::writePin(std::move(StepperC0), 1);
-            gpio::writePin(std::move(StepperC1), 0);
-            gpio::writePin(std::move(StepperC2), 0);
-            gpio::writePin(std::move(StepperC3), 1);
-            break;
-        default:
-            break;
-        }
-
-        delay(1000 / spd);
-    }
-    
-}
-
 int main(void)
 {
     // Reset system to clean state
     system::init();
 
-    //init_i2c(100 * 1000);
-
     init_xsoc();
+
+    //pwmMain();
 
     // Setup SYS PLL for 12 MHz * 133 / 6 / 2 = 133 MHz
     //init_pll_sys(1, 133, 6, 2);
@@ -220,112 +124,14 @@ int main(void)
 
     setup_clocks();
 
-    //const uint32_t WS28Pin = 16;
-    const uint32_t WS28Pin = 14;
-    const uint32_t LedPin2 = 14;
-    const uint32_t LedPin = 8;
-
-    const uint32_t StepperC0 = 3;
-    const uint32_t StepperC1 = 4;
-    const uint32_t StepperC2 = 5;
-    const uint32_t StepperC3 = 6;
-
-    // Setup pin 16 and 25(WS2812B and LED) as out
-    gpio::setupPin(std::move(LedPin), pindir::out, pinfunc::SIO);
-    gpio::setupPin(std::move(LedPin2), pindir::out, pinfunc::SIO);
-    gpio::setupPin(25, pindir::out, pinfunc::SIO);
-
-    gpio::setupPin(15, pindir::in, pinfunc::SIO);
-
-    // Setup stepper pins as out
-    gpio::setupPin(std::move(StepperC0), pindir::out, pinfunc::SIO);
-    gpio::setupPin(std::move(StepperC1), pindir::out, pinfunc::SIO);
-    gpio::setupPin(std::move(StepperC2), pindir::out, pinfunc::SIO);
-    gpio::setupPin(std::move(StepperC3), pindir::out, pinfunc::SIO);
-
-    // Setup stepper driver
-    drivers::LN298NDriver driver(StepperC0, StepperC1, StepperC2, StepperC3);
-
-    // Setup I2C pins
-    gpio::setupPin(std::move(0), pindir::out, pinfunc::I2C);
-    gpio::setupPin(std::move(1), pindir::out, pinfunc::I2C);
-    //s_pads_bank_0.gpio[26].pue = (1 << 26 | 1 << 27);
-
-    // Setup LedPin2 and WS28Pin as pio out pins.
-    //gpio::setupPin(std::move(LedPin2), pindir::out, pinfunc::PIO0);
-    gpio::setupPin(std::move(WS28Pin), pindir::out, pinfunc::PIO0);
-
-    // Setup LedPin2 as PWM
-    //gpio::setupPin(std::move(LedPin2), pindir::out, pinfunc::PWM);
-    //pwm::enable(std::move(LedPin2));
-
-    //const std::array<uint32_t, 24> arr = { 1,1,1,1,1,1,1,1, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
-    //const std::array<uint32_t, 24> arr = { 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
-
-    setup_pio();
-    setup_sm0();
-
-    // Enable PIO 0
-    bsp::rp2040::s_pio_0.control.sm_enable = 15; // Enable all cores!!!!
-
-
     // Registry check
-    if (reinterpret_cast<uint32_t>(&s_i2c_0.tar) != 0x40044000 + 0x04)
+    if (reinterpret_cast<uint32_t>(&bsp::rp2040::s_i2c_0.tar) != 0x40044000 + 0x04)
         return 0;
-
-    //gpio::togglePin(std::move(LedPin));
-
-    if (reinterpret_cast<uint32_t>(&s_i2c_0.sar) != 0x40044000 + 0x08)
-        return 0;
-
-    //gpio::togglePin(std::move(LedPin));
-
-    //const uint32_t spd = freq_12mhz / 4;
-    const uint32_t spd = 1;
-
-    //step(200, StepperC0, StepperC1, StepperC2, StepperC3);
-    
-    while (true)
-    {
-        gpio::togglePin(std::move(LedPin));
-        delay(freq_48mhz);
-    }
-    
-
-    // Stepper motor
-    while (true)
-    {
-        if (!gpio::readPin(15))
-        {
-            delay(1000 / spd);
-            continue;
-        }
-
-        gpio::togglePin(std::move(LedPin));
-
-        driver.stepForward();
-        delay(1000 /  spd);
-    }
-    
-
-    // PWM
-    while (true)
-    {
-        for(auto rb = 0x0000; rb < 0x10000; rb++)
-        {
-            pwm::writeCompare(std::move(LedPin2), rb);
-            delay(0x10 / 2);
-        }
-    }
 
     // Blink 182
     while (true)
     {
-        gpio::togglePin(std::move(LedPin));
-        delay(100000);
-
-        gpio::togglePin(std::move(LedPin));
-        delay(100000);
+        system::delay(1);
     }
     return 0;
 }
