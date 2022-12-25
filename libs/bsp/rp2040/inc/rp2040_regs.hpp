@@ -1705,6 +1705,285 @@ namespace bsp::rp2040
         } comp;
     };
 
+    struct Uart
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t data : 8;
+                uint32_t fe : 1;
+                uint32_t pe : 1;
+                uint32_t be : 1;
+                uint32_t oe : 1;
+            };
+        } dr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t fe : 1;
+                uint32_t pe : 1;
+                uint32_t be : 1;
+                uint32_t oe : 1;
+            };
+        } rsr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t cts : 1;
+                uint32_t dsr : 1;
+                uint32_t dcd : 1;
+                uint32_t busy : 1;
+                uint32_t rxfe : 1;
+                uint32_t txff : 1;
+                uint32_t rxff : 1;
+                uint32_t txfe : 1;
+                uint32_t ri : 1;
+            };
+        } fr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t ilpdvsr : 8;
+            };
+        } ilpr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t baud_divint : 16;
+            };
+        } ibrd;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t baud_divfrac : 16;
+            };
+        } fbrd;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t brk : 1;
+                uint32_t pen : 1;
+                uint32_t eps : 1;
+                uint32_t stp2 : 1;
+                uint32_t fen : 1;
+                uint32_t wlen : 1;
+                uint32_t sps : 1;
+            };
+        } lcr_h;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t uarten : 1;
+                uint32_t siren : 1;
+                uint32_t sirlp : 1;
+                uint32_t : 4;
+                uint32_t lbe : 1;
+                uint32_t txe : 1;
+                uint32_t rxe : 1;
+                uint32_t dtr : 1;
+                uint32_t rts : 1;
+                uint32_t out1 : 1;
+                uint32_t out2 : 1;
+                uint32_t rtsen : 1;
+                uint32_t ctsen : 1;
+            };
+        } cr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t txiflsel : 3;
+                uint32_t rxiflsel : 3;
+            };
+        } ifls;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t rimm : 1;
+                uint32_t ctsmim : 1;
+                uint32_t dcdmim : 1;
+                uint32_t dsrmim : 1;
+                uint32_t rxim : 1;
+                uint32_t txim : 1;
+                uint32_t rtim : 1;
+                uint32_t feim : 1;
+                uint32_t peim : 1;
+                uint32_t beim : 1;
+                uint32_t oeim : 1;
+            };
+        } imsc;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t rirmis : 1;
+                uint32_t ctsrmis : 1;
+                uint32_t dcdrmis : 1;
+                uint32_t dsrrmis : 1;
+                uint32_t rxris : 1;
+                uint32_t txris : 1;
+                uint32_t rtris : 1;
+                uint32_t feris : 1;
+                uint32_t peris : 1;
+                uint32_t beris : 1;
+                uint32_t oeris : 1;
+            };
+        } ris;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t rimmis : 1;
+                uint32_t ctsmmis : 1;
+                uint32_t dcdmmis : 1;
+                uint32_t dsrmmis : 1;
+                uint32_t rxmis : 1;
+                uint32_t txmis : 1;
+                uint32_t rtmis : 1;
+                uint32_t femis : 1;
+                uint32_t pemis : 1;
+                uint32_t bemis : 1;
+                uint32_t oemis : 1;
+            };
+        } mis;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t rmic : 1;
+                uint32_t ctsmic : 1;
+                uint32_t dcdmic : 1;
+                uint32_t dsrmic : 1;
+                uint32_t rxic : 1;
+                uint32_t txic : 1;
+                uint32_t rtic : 1;
+                uint32_t feic : 1;
+                uint32_t peic : 1;
+                uint32_t beic : 1;
+                uint32_t oeic : 1;
+            };
+        } icr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t rxdmae : 1;
+                uint32_t txdmae : 1;
+                uint32_t dmaonerr : 1;
+            };
+        } dmacr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t partnumber0 : 8;
+            };
+        } periphid0;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t partnumber1 : 4;
+                uint32_t designer0 : 4;
+            };
+        } periphid1;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t designer1 : 4;
+                uint32_t revision : 4;
+            };
+        } periphid2;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t configuration : 8;
+            };
+        } periphid3;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t uartpcellid0 : 8;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t uartpcellid1 : 8;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t uartpcellid2 : 8;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t uartpcellid3 : 8;
+            };
+        };
+    };
+
     extern volatile SIO s_sio;
     extern volatile IO_BANK_0 s_io_bank_0;
     extern volatile PADS_BANK_0 s_pads_bank_0;
@@ -1719,4 +1998,6 @@ namespace bsp::rp2040
     extern volatile PWM s_pwm;
     extern volatile I2C s_i2c_0;
     extern volatile I2C s_i2c_1;
+    extern volatile Uart s_uart_0;
+    extern volatile Uart s_uart_1;
 }

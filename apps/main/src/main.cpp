@@ -6,6 +6,8 @@
 //#include "ln298n.hpp"
 #include "rp2040.hpp"
 
+#include "experiments/uart.hpp"
+
 using namespace hal;
 using namespace hal::pins;
 //using namespace drivers;
@@ -117,16 +119,21 @@ int main(void)
     //init_pll_sys(1, 100, 6, 1);
     
     // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
-    init_pll_sys(1, 120, 6, 5);
+    //init_pll_sys(1, 120, 6, 5);
 
     // Setup USB PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
-    init_pll_usb(1, 120, 6, 5);
+    //init_pll_usb(1, 120, 6, 5);
 
-    setup_clocks();
+    //setup_clocks();
+
+    uartMain();
 
     // Registry check
     if (reinterpret_cast<uint32_t>(&bsp::rp2040::s_i2c_0.tar) != 0x40044000 + 0x04)
         return 0;
+
+    gpio::setupPin(14, pindir::out, pinfunc::SIO);
+    gpio::writePin(14, true);
 
     // Blink 182
     while (true)
