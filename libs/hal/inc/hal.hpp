@@ -3,6 +3,8 @@
 #include <cstdint>
 
 #include "pins.hpp"
+#include "pwm.hpp"
+#include "uart.hpp"
 
 namespace hal
 {

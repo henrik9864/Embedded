@@ -24,11 +24,11 @@ const uint32_t freq_1_15mhz = 1.15 * 1000000;
 const uint32_t freq_1mhz = 1 * 1000000;
 const uint32_t freq_100khz = 100000;
 
-const uint32_t freq = freq_48mhz;
+uint32_t freq = freq_12mhz;
 
-void sleep(const uint32_t ns)
+void sleep(const uint32_t ms)
 {
-    hal::system::delay((ns / 1000000000) * freq);
+    hal::system::delay((ms / 1000000) * freq);
 }
 
 void init_xsoc()
@@ -87,10 +87,12 @@ void setup_clocks()
 
     bsp::rp2040::s_clocks.ref.control.src = 0x2; // Set ref clk src to xsoc
 
-    bsp::rp2040::s_clocks.sys.control.src = 0x1; // Set sys src to pll_sys
+    bsp::rp2040::s_clocks.sys.control.src = 0x1; // Set sys src to auxsrc
+    //bsp::rp2040::s_clocks.sys.control.src = 0x0; // Set sys src to ref
     bsp::rp2040::s_clocks.sys.control.auxsrc = 0x0; // Set sys auxsrc to pll_sys
     bsp::rp2040::s_clocks.sys.div.integer = 0x1; // Reset div
 
+    /*
     bsp::rp2040::s_clocks.peripheral.control.enable = 0x1; // Enable peri clock
     bsp::rp2040::s_clocks.peripheral.control.auxsrc = 0x0; // Set auxsrc to clk_sys
 
@@ -103,6 +105,7 @@ void setup_clocks()
     bsp::rp2040::s_clocks.rtc.div.integer = 256; // 12MHz / 256 = 46875 Hz
     bsp::rp2040::s_clocks.rtc.control.enable = 0x1; // Enable rtc clock
     bsp::rp2040::s_clocks.rtc.control.auxsrc = 0x3; // Set rtc clk src to xsoc
+    */
 }
 
 int main(void)
@@ -120,6 +123,7 @@ int main(void)
     
     // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
     //init_pll_sys(1, 120, 6, 5);
+    //freq = freq_48mhz;
 
     // Setup USB PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
     //init_pll_usb(1, 120, 6, 5);
@@ -129,8 +133,8 @@ int main(void)
     uartMain();
 
     // Registry check
-    if (reinterpret_cast<uint32_t>(&bsp::rp2040::s_i2c_0.tar) != 0x40044000 + 0x04)
-        return 0;
+    //if (reinterpret_cast<uint32_t>(&bsp::rp2040::s_uart_0.dmacr) != 0x40034000 + 0x048)
+    //    return 0;
 
     gpio::setupPin(14, pindir::out, pinfunc::SIO);
     gpio::writePin(14, true);
@@ -138,7 +142,8 @@ int main(void)
     // Blink 182
     while (true)
     {
-        system::delay(1);
+        sleep(30 * 1000000);
+        gpio::togglePin(14);
     }
     return 0;
 }

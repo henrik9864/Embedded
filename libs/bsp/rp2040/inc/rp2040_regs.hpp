@@ -1793,7 +1793,7 @@ namespace bsp::rp2040
                 uint32_t eps : 1;
                 uint32_t stp2 : 1;
                 uint32_t fen : 1;
-                uint32_t wlen : 1;
+                uint32_t wlen : 2;
                 uint32_t sps : 1;
             };
         } lcr_h;
