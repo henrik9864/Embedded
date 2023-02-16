@@ -21,5 +21,8 @@ namespace hal::pins
 		static bool readPin(const pin_id&& pin);
 		static void writePin(const pin_id&& pin, bool value);
 		static void togglePin(const pin_id&& pin);
+
+		static void setPullUp(const pin_id&& pin);
+		static void setPullDown(const pin_id&& pin);
 	};
 }

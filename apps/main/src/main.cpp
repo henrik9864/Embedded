@@ -7,6 +7,7 @@
 #include "rp2040.hpp"
 
 #include "experiments/uart.hpp"
+#include "experiments/i2c.hpp"
 
 using namespace hal;
 using namespace hal::pins;
@@ -87,14 +88,14 @@ void setup_clocks()
 
     bsp::rp2040::s_clocks.ref.control.src = 0x2; // Set ref clk src to xsoc
 
-    bsp::rp2040::s_clocks.sys.control.src = 0x1; // Set sys src to auxsrc
-    //bsp::rp2040::s_clocks.sys.control.src = 0x0; // Set sys src to ref
+    //bsp::rp2040::s_clocks.sys.control.src = 0x1; // Set sys src to auxsrc
+    bsp::rp2040::s_clocks.sys.control.src = 0x0; // Set sys src to ref
     bsp::rp2040::s_clocks.sys.control.auxsrc = 0x0; // Set sys auxsrc to pll_sys
     bsp::rp2040::s_clocks.sys.div.integer = 0x1; // Reset div
 
-    /*
     bsp::rp2040::s_clocks.peripheral.control.enable = 0x1; // Enable peri clock
-    bsp::rp2040::s_clocks.peripheral.control.auxsrc = 0x0; // Set auxsrc to clk_sys
+    //bsp::rp2040::s_clocks.peripheral.control.auxsrc = 0x0; // Set auxsrc to clk_sys
+    bsp::rp2040::s_clocks.peripheral.control.auxsrc = 0x4; // Set auxsrc to xosc
 
     bsp::rp2040::s_clocks.usb.control.enable = 0x1; // Enable usb clock
     bsp::rp2040::s_clocks.usb.control.auxsrc = 0x0; // Set auxsrc to pll_usb
@@ -105,7 +106,6 @@ void setup_clocks()
     bsp::rp2040::s_clocks.rtc.div.integer = 256; // 12MHz / 256 = 46875 Hz
     bsp::rp2040::s_clocks.rtc.control.enable = 0x1; // Enable rtc clock
     bsp::rp2040::s_clocks.rtc.control.auxsrc = 0x3; // Set rtc clk src to xsoc
-    */
 }
 
 int main(void)
@@ -128,9 +128,10 @@ int main(void)
     // Setup USB PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
     //init_pll_usb(1, 120, 6, 5);
 
-    //setup_clocks();
+    setup_clocks();
 
-    uartMain();
+    i2cMain();
+    //uartMain();
 
     // Registry check
     //if (reinterpret_cast<uint32_t>(&bsp::rp2040::s_uart_0.dmacr) != 0x40034000 + 0x048)

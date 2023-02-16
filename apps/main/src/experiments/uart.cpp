@@ -15,7 +15,7 @@ void setup_uart_clocks()
     bsp::rp2040::s_clocks.sys.div.integer = 0x1; // Reset div
 
     bsp::rp2040::s_clocks.peripheral.control.enable = 0x1; // Enable peri clock
-    bsp::rp2040::s_clocks.peripheral.control.auxsrc = 0x4; // Set auxsrc to clk_sys
+    bsp::rp2040::s_clocks.peripheral.control.auxsrc = 0x4; // Set auxsrc to xosc
 }
 
 void uartMain()
