@@ -44,10 +44,10 @@ void gpio::togglePin(const pin_id&& pin)
 
 void gpio::setPullUp(const pin_id&& pin)
 {
-	s_pads_bank_0.gpio[pin].pde = 0x1;
+	s_pads_bank_0.gpio[pin].pue = 0x1;
 }
 
 void gpio::setPullDown(const pin_id&& pin)
 {
-	s_pads_bank_0.gpio[pin].pue = 0x1;
+	s_pads_bank_0.gpio[pin].pde = 0x1;
 }

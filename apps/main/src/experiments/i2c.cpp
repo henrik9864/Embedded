@@ -39,15 +39,32 @@ void i2c_init(const uint32_t baudrate)
     s_i2c_0.enable.enable = 0x1;
 }
 
-uint32_t i2c_read(const uint32_t address)
+void i2c_write(const uint32_t address, const uint8_t data, bool nostop)
 {
     s_i2c_0.enable.enable = 0x0;
     s_i2c_0.tar.tar = address;
     s_i2c_0.enable.enable = 0x1;
 
+    s_i2c_0.data_cmd.dat = data;
+    s_i2c_0.data_cmd.restart = 0x1;
+    s_i2c_0.data_cmd.stop = !nostop;
+}
+
+uint8_t i2c_read(const uint32_t address, bool nostop)
+{
+    s_i2c_0.enable.enable = 0x0;
+    s_i2c_0.tar.tar = address;
+    s_i2c_0.enable.enable = 0x1;
+
+    while (!(16 - s_i2c_0.txflr)) { system::delay(1); };
+
     //s_i2c_0.data_cmd.first_data_byte = 0x0B;
     s_i2c_0.data_cmd.cmd = 0x1;
+    s_i2c_0.data_cmd.restart = 0x1;
+    s_i2c_0.data_cmd.stop = !nostop;
+
     while (!s_i2c_0.rxflr) { system::delay(1); };
+    gpio::writePin(14, true);
 
     return s_i2c_0.data_cmd.dat;
 }
@@ -59,12 +76,16 @@ void i2cMain()
     i2c_init(100 * 1000);
 
     // Setup I2C pins
-    gpio::setupPin(std::move(2), pindir::out, pinfunc::I2C);
-    gpio::setupPin(std::move(3), pindir::out, pinfunc::I2C);
+    gpio::setupPin(std::move(4), pindir::out, pinfunc::I2C);
+    gpio::setupPin(std::move(5), pindir::out, pinfunc::I2C);
     //s_pads_bank_0.gpio[26].pue = (1 << 26 | 1 << 27);
 
-    gpio::setPullUp(std::move(2));
-    gpio::setPullUp(std::move(3));
+    gpio::setPullUp(std::move(4));
+    gpio::setPullUp(std::move(5));
+
+    gpio::setupPin(14, pindir::out, pinfunc::SIO);
+
+    //gpio::writePin(14, true);
 
     while (true)
     {
@@ -73,8 +94,12 @@ void i2cMain()
 
         etl::string<8> text;
 
-        uart::send(etl::to_string(i2c_read(0x34), text, format));
+        uart::send(etl::to_string(i2c_read(0x34, true), text, format));
         //uart::send(etl::to_string(i2c_read(0x0B), text, format));
+
+        //i2c_write(0x36, 0x0C, true);
+        //if (i2c_read(0x36, false) != 0)
+        //    gpio::writePin(14, true);
 
         hal::system::delay(1);
     }
