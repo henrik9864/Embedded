@@ -1705,6 +1705,195 @@ namespace bsp::rp2040
         } comp;
     };
 
+    struct SPI
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t dss : 4;
+                uint32_t frf : 2;
+                uint32_t spo : 1;
+                uint32_t sph : 1;
+                uint32_t scr : 8;
+            };
+        } cr0;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t lbm : 1;
+                uint32_t sse : 1;
+                uint32_t ms : 1;
+                uint32_t sod : 1;
+            };
+        } cr1;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t data : 16;
+            };
+        } dr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t tfe : 1;
+                uint32_t tnf : 1;
+                uint32_t rne : 1;
+                uint32_t rff : 1;
+                uint32_t bsy : 1;
+            };
+        } sr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t cpsdvsr : 8;
+            };
+        } cpsr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t rorim : 1;
+                uint32_t rtim : 1;
+                uint32_t rxim : 1;
+                uint32_t txim : 1;
+            };
+        } imsc;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t rossis : 1;
+                uint32_t rtris : 1;
+                uint32_t rxris : 1;
+                uint32_t txris : 1;
+            };
+        } ris;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t rormis : 1;
+                uint32_t rtmis : 1;
+                uint32_t rxmis : 1;
+                uint32_t txmis : 1;
+            };
+        } mis;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t roric : 1;
+                uint32_t rtic : 1;
+            };
+        } icr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t rxdmae : 1;
+                uint32_t txdmae : 1;
+            };
+        } dmacr;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t partnumber0 : 8;
+            };
+        } periphid0;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t designer1 : 4;
+                uint32_t revision : 4;
+            };
+        } periphid1;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t partnumber1 : 4;
+                uint32_t designer1 : 4;
+            };
+        } periphid2;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t configuration : 8;
+            };
+        } periphid3;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t pcellid0 : 8;
+            };
+        } pcellid0;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t pcellid1 : 8;
+            };
+        } pcellid1;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t pcellid2 : 8;
+            };
+        } pcellid2;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t pcellid3 : 8;
+            };
+        } pcellid3;
+    };
+
     struct Uart
     {
         union
@@ -2007,4 +2196,6 @@ namespace bsp::rp2040
     extern volatile I2C s_i2c_1;
     extern volatile Uart s_uart_0;
     extern volatile Uart s_uart_1;
+    extern volatile SPI s_spi_0;
+    extern volatile SPI s_spi_1;
 }

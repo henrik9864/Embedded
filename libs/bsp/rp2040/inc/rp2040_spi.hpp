@@ -1,6 +1,6 @@
 #pragma once
 
-#include "uart.hpp"
+#include "spi.hpp"
 #include "pins.hpp"
 #include "clock.hpp"
 

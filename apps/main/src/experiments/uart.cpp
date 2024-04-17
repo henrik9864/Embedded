@@ -20,10 +20,11 @@ void setup_uart_clocks()
 
 void uartMain()
 {
-    setup_uart_clocks();
+    //setup_uart_clocks();
 
     uart::enable(0, 1);
 
+    /*
     while (true)
     {
         for (size_t i = 0; i < 10; i++)
@@ -32,4 +33,5 @@ void uartMain()
             system::delay(12000000 / 10);
         }
     }
+    */
 }

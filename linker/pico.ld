@@ -24,6 +24,8 @@ MEMORY
   i2c_1      (r) : ORIGIN = 0x40048000, LENGTH = 1K
   uart_0     (r) : ORIGIN = 0x40034000, LENGTH = 1K
   uart_1     (r) : ORIGIN = 0x40038000, LENGTH = 1K
+  spi_0      (r) : ORIGIN = 0x4003c000, LENGTH = 1K
+  spi_1      (r) : ORIGIN = 0x40040000, LENGTH = 1K
 
   /* PIO memory registers */
   pio_0_mem (rw) : ORIGIN = 0x50200000 + 0x048, LENGTH = 1K
@@ -196,6 +198,14 @@ SECTIONS
   .uart_1_regs (NOLOAD) : {
     *(.uart_1_regs)
   } > uart_1
+
+  .spi_0_regs (NOLOAD) : {
+    *(.spi_0_regs)
+  } > spi_0
+
+  .spi_1_regs (NOLOAD) : {
+    *(.spi_1_regs)
+  } > spi_1
 };
 
 _estack = ORIGIN(ram) + LENGTH(ram); /* stack starts at end of ram */

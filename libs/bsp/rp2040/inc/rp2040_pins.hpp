@@ -5,7 +5,7 @@
 
 enum class hal::pins::pinfunc : uint32_t
 {
-	SPIO = 1,
+	SPI = 1,
 	UART = 2,
 	I2C = 3,
 	PWM = 4,

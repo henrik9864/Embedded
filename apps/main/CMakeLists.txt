@@ -17,15 +17,15 @@ function(generate_pio_headers project)
   endforeach()
 endfunction()
 
-add_custom_command(
-  OUTPUT  inc/pio/blink.hpp  # Treated as relative to CMAKE_CURRENT_BINARY_DIR
-  COMMAND pioasm -o c -p pio_0_mem ${CMAKE_CURRENT_SOURCE_DIR}/src/pio/blink.pio ${CMAKE_CURRENT_BINARY_DIR}/inc/pio/blink.hpp
-  DEPENDS src/pio/blink.pio  # Treated as relative to CMAKE_CURRENT_SOURCE_DIR
-)
+#add_custom_command(
+#  OUTPUT  inc/pio/blink.hpp  # Treated as relative to CMAKE_CURRENT_BINARY_DIR
+#  COMMAND pioasm -o c -p pio_0_mem ${CMAKE_CURRENT_SOURCE_DIR}/src/pio/blink.pio ${CMAKE_CURRENT_BINARY_DIR}/inc/pio/blink.hpp
+#  DEPENDS src/pio/blink.pio  # Treated as relative to CMAKE_CURRENT_SOURCE_DIR
+#)
 
 project(main CXX ASM C)
 
-add_executable(${PROJECT_NAME} src/main.cpp src/experiments/stepper.cpp src/experiments/pio.cpp src/experiments/pwm.cpp src/experiments/i2c.cpp src/experiments/uart.cpp inc/pio/blink.hpp)
+add_executable(${PROJECT_NAME} src/main.cpp src/experiments/stepper.cpp src/experiments/pio.cpp src/experiments/pwm.cpp src/experiments/i2c.cpp src/experiments/uart.cpp)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 23)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE rp2040 hal drivers etl::etl)

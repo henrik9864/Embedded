@@ -4,10 +4,14 @@ using namespace hal::pins;
 
 void hal::uart::enable(const pins::pin_id&& tx, const pins::pin_id&& rx)
 {
-    // (12000000 / ( 16 / 115200 )) = 6.514
+    // (12000000 / ( 16 * 115200 )) = 6.514
     // 0.514 * 64 = 32.666
-    bsp::rp2040::s_uart_0.ibrd.baud_divint = 6;
-    bsp::rp2040::s_uart_0.fbrd.baud_divfrac = 33;
+
+    // (48000000 / ( 16 * 115200 )) = 26.04
+    // 0.04 * 64 = 2.56
+
+    bsp::rp2040::s_uart_0.ibrd.baud_divint = 26;
+    bsp::rp2040::s_uart_0.fbrd.baud_divfrac = 3;
 
     bsp::rp2040::s_uart_0.lcr_h.fen = 1; // Enable fifo
     bsp::rp2040::s_uart_0.lcr_h.wlen = 0b11; // Set 8 data bits
