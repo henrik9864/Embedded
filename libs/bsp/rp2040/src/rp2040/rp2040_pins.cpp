@@ -1,5 +1,7 @@
 #include "rp2040_pins.hpp"
 
+#include <memory>
+
 using namespace bsp::rp2040;
 using namespace hal::pins;
 
@@ -10,14 +12,7 @@ void gpio::setupPin(const pin_id&& pin, const pindir&& dir, const pinfunc&& func
 	if (func != pinfunc::SIO)
 		return;
 
-	if (dir == pindir::out)
-	{
-		s_sio.gpio_oe_set = 1 << pin; // Set output enable for pin
-	}
-	else if (dir == pindir::in)
-	{
-		s_sio.gpio_oe_clr = 1 << pin; // Clear output enable for pin
-	}
+	setPinDir(std::move(pin), std::move(dir));
 }
 
 bool gpio::readPin(const pin_id&& pin)
@@ -50,4 +45,16 @@ void gpio::setPullUp(const pin_id&& pin)
 void gpio::setPullDown(const pin_id&& pin)
 {
 	s_pads_bank_0.gpio[pin].pde = 0x1;
+}
+
+void gpio::setPinDir(const pin_id&& pin, const pindir&& dir)
+{
+	if (dir == pindir::out)
+	{
+		s_sio.gpio_oe_set = 1 << pin; // Set output enable for pin
+	}
+	else if (dir == pindir::in)
+	{
+		s_sio.gpio_oe_clr = 1 << pin; // Clear output enable for pin
+	}
 }

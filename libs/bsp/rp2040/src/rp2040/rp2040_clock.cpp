@@ -12,6 +12,8 @@ const uint32_t freq_1_15mhz = 1.15 * 1000000;
 const uint32_t freq_1mhz = 1 * 1000000;
 const uint32_t freq_100khz = 100000;
 
+static uint32_t freq = freq_12mhz;
+
 void init_xsoc()
 {
     bsp::rp2040::s_xsoc.control.freq_range = 0xaab;
@@ -75,13 +77,17 @@ void hal::clock::init()
     init_xsoc();
 
     // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
-    init_pll_sys(1, 120, 6, 5);
+    //init_pll_sys(1, 120, 6, 5);
     //freq = freq_48mhz;
+
+    // Setup SYS PLL for 12 MHz * 133 / 6 / 2 = 133 MHz
+    init_pll_sys(1, 133, 6, 2);
+    freq = freq_133mhz;
 
     setup_clocks();
 }
 
 uint32_t hal::clock::getHz()
 {
-    return freq_48mhz;
+    return freq;
 }

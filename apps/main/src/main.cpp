@@ -66,13 +66,25 @@ int main(void)
     //i2cMain();
     uartMain();
 
-    hal::spi::init(4, 5, 6, (33 * 1000 * 1000));
+    hal::spi::init(4, 9, 5, 6, (33 * 1000 * 1000));
+
+    gpio::setPinDir(9, pindir::out);
+
+    gpio::setPinDir(9, pindir::in);
+
+    std::uint32_t dma_rx = 0;
+    std::uint32_t dma_tx = 1;
+
+    hal::dma::enable(dma_rx);
 
     etl::format_spec format;
     format.hex().width(8).fill('0');
 
+    //bsp::rp2040::s_dma.
+    auto regAddr = reinterpret_cast<uint32_t>(&bsp::rp2040::s_dma_dbg.dbg[11].tcr);
+
     etl::string<8> str;
-    etl::to_string(8, str, format);
+    etl::to_string(regAddr, str, format);
 
     uart::send(str);
 

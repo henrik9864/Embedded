@@ -24,5 +24,6 @@ namespace hal::pins
 
 		static void setPullUp(const pin_id&& pin);
 		static void setPullDown(const pin_id&& pin);
+		static void setPinDir(const pin_id&& pin, const pindir&& dir);
 	};
 }

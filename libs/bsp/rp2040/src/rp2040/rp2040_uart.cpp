@@ -2,7 +2,7 @@
 
 using namespace hal::pins;
 
-void hal::uart::enable(const pins::pin_id&& tx, const pins::pin_id&& rx)
+void hal::uart::enable(const pins::pin_id&& tx, const pins::pin_id&& rx, const std::uint32_t baudrate)
 {
     // (12000000 / ( 16 * 115200 )) = 6.514
     // 0.514 * 64 = 32.666
@@ -10,8 +10,13 @@ void hal::uart::enable(const pins::pin_id&& tx, const pins::pin_id&& rx)
     // (48000000 / ( 16 * 115200 )) = 26.04
     // 0.04 * 64 = 2.56
 
-    bsp::rp2040::s_uart_0.ibrd.baud_divint = 26;
-    bsp::rp2040::s_uart_0.fbrd.baud_divfrac = 3;
+    std::float_t bps = hal::clock::getHz() / static_cast<std::float_t>(16 * baudrate);
+
+    std::float_t div;
+    std::float_t frac = std::modf(bps, &div);
+
+    bsp::rp2040::s_uart_0.ibrd.baud_divint = static_cast<std::uint32_t>(div);
+    bsp::rp2040::s_uart_0.fbrd.baud_divfrac = static_cast<std::uint32_t>(64 * frac);
 
     bsp::rp2040::s_uart_0.lcr_h.fen = 1; // Enable fifo
     bsp::rp2040::s_uart_0.lcr_h.wlen = 0b11; // Set 8 data bits

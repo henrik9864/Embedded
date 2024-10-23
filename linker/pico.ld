@@ -26,6 +26,9 @@ MEMORY
   uart_1     (r) : ORIGIN = 0x40038000, LENGTH = 1K
   spi_0      (r) : ORIGIN = 0x4003c000, LENGTH = 1K
   spi_1      (r) : ORIGIN = 0x40040000, LENGTH = 1K
+  dma        (r) : ORIGIN = 0x50000000, LENGTH = 1K
+  dma_intr   (r) : ORIGIN = 0x50000400, LENGTH = 1K
+  dma_dbg    (r) : ORIGIN = 0x50000800, LENGTH = 1K
 
   /* PIO memory registers */
   pio_0_mem (rw) : ORIGIN = 0x50200000 + 0x048, LENGTH = 1K
@@ -206,6 +209,18 @@ SECTIONS
   .spi_1_regs (NOLOAD) : {
     *(.spi_1_regs)
   } > spi_1
+
+  .dma_regs (NOLOAD) : {
+    *(.dma_regs)
+  } > dma
+
+  .dma_intr_regs (NOLOAD) : {
+    *(.dma_intr_regs)
+  } > dma_intr
+
+  .dma_dbg_regs (NOLOAD) : {
+    *(.dma_dbg_regs)
+  } > dma_dbg
 };
 
 _estack = ORIGIN(ram) + LENGTH(ram); /* stack starts at end of ram */

@@ -20,4 +20,7 @@ namespace bsp::rp2040
     volatile Uart s_uart_1 __attribute__((section(".uart_1_regs")));
     volatile SPI s_spi_0 __attribute__((section(".spi_0_regs")));
     volatile SPI s_spi_1 __attribute__((section(".spi_1_regs")));
+    volatile DMA s_dma __attribute__((section(".dma_regs")));
+    volatile DMA_INTR s_dma_intr __attribute__((section(".dma_intr_regs")));
+    volatile DMA_DBG s_dma_dbg __attribute__((section(".dma_dbg_regs")));
 }

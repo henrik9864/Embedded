@@ -2180,6 +2180,217 @@ namespace bsp::rp2040
         } u;
     };
 
+    struct DMA
+    {
+        struct
+        {
+            uint32_t read;
+            uint32_t write;
+            uint32_t trans;
+
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t en : 1;
+                    uint32_t high_priority : 1;
+                    uint32_t data_size : 2;
+                    uint32_t incr_read : 1;
+                    uint32_t incr_write : 1;
+                    uint32_t ring_size : 4;
+                    uint32_t ring_sel : 1;
+                    uint32_t chain_to : 4;
+                    uint32_t treq_sel : 6;
+                    uint32_t irq_quite : 1;
+                    uint32_t bswap : 1;
+                    uint32_t sniff_en : 1;
+                    uint32_t busy : 1;
+                    uint32_t : 4;
+                    uint32_t write_error : 1;
+                    uint32_t read_error : 1;
+                };
+            } ctrl;
+
+            struct
+            {
+                uint32_t ctrl;
+                uint32_t read;
+                uint32_t write;
+                uint32_t trans;
+            } ali1;
+
+            struct
+            {
+                uint32_t ctrl;
+                uint32_t trans;
+                uint32_t read;
+                uint32_t write;
+            } ali2;
+
+            struct
+            {
+                uint32_t ctrl;
+                uint32_t write;
+                uint32_t trans;
+                uint32_t read;
+            } ali3;
+
+        } ch[12];
+    };
+
+    struct DMA_INTR
+    {
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t intr : 16;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t inte0 : 16;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t intf0 : 16;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t ints0 : 16;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t inte1 : 16;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t intf1 : 16;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t ints1 : 16;
+            };
+        };
+
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t y : 16;
+                    uint32_t x : 16;
+                };
+            };
+        } timer[4];
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t multi_chan_trigger : 16;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t en : 1;
+                uint32_t dmatch : 4;
+                uint32_t calc : 4;
+                uint32_t bswap : 1;
+                uint32_t out_rev : 1;
+                uint32_t out_inv : 1;
+            };
+        } sniff_ctrl;
+
+        uint32_t sniff_data;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t tdf_lvl : 8;
+                uint32_t waf_lvl : 8;
+                uint32_t raf_lvl : 8;
+            };
+        } fifo_levels;
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t chan_abort : 16;
+            };
+        };
+
+        union
+        {
+            uint32_t : 32;
+            struct
+            {
+                uint32_t n_channels : 5;
+            };
+        };
+    };
+
+    struct DMA_DBG
+    {
+        struct
+        {
+            union
+            {
+                uint32_t : 32;
+                struct
+                {
+                    uint32_t ctdreq : 6;
+                };
+            };
+
+            uint32_t tcr;
+
+            uint32_t filler[14];
+        } dbg[12];
+    };
+
     extern volatile SIO s_sio;
     extern volatile IO_BANK_0 s_io_bank_0;
     extern volatile PADS_BANK_0 s_pads_bank_0;
@@ -2198,4 +2409,7 @@ namespace bsp::rp2040
     extern volatile Uart s_uart_1;
     extern volatile SPI s_spi_0;
     extern volatile SPI s_spi_1;
+    extern volatile DMA s_dma;
+    extern volatile DMA_INTR s_dma_intr;
+    extern volatile DMA_DBG s_dma_dbg;
 }

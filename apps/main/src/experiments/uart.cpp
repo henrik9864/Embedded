@@ -22,7 +22,7 @@ void uartMain()
 {
     //setup_uart_clocks();
 
-    uart::enable(0, 1);
+    uart::enable(0, 1, 115200);
 
     /*
     while (true)

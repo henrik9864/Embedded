@@ -71,7 +71,7 @@ uint8_t i2c_read(const uint32_t address, bool nostop)
 
 void i2cMain()
 {
-    uart::enable(0, 1);
+    uart::enable(0, 1, 115200);
 
     i2c_init(100 * 1000);
 
