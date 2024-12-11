@@ -1737,7 +1737,7 @@ namespace bsp::rp2040
             uint32_t : 32;
             struct
             {
-                uint32_t data : 16;
+                uint16_t data;
             };
         } dr;
 
@@ -2209,6 +2209,7 @@ namespace bsp::rp2040
                     uint32_t : 4;
                     uint32_t write_error : 1;
                     uint32_t read_error : 1;
+                    uint32_t ahb_error : 1;
                 };
             } ctrl;
 

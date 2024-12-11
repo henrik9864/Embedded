@@ -8,6 +8,11 @@ using namespace hal::pins;
 void gpio::setupPin(const pin_id&& pin, const pindir&& dir, const pinfunc&& func)
 {
 	s_io_bank_0.gpio[pin].control.funcsel = static_cast<uint32_t>(func);
+	//s_io_bank_0.gpio[pin].control. = static_cast<uint32_t>(func);
+	s_pads_bank_0.gpio[pin].pde = 1;
+	s_pads_bank_0.gpio[pin].pue = 1;
+	s_pads_bank_0.gpio[pin].slewfast = 1;
+	s_pads_bank_0.gpio[pin].drive = 0x3;
 
 	if (func != pinfunc::SIO)
 		return;

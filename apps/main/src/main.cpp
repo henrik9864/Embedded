@@ -2,6 +2,8 @@
 #include <cstddef>
 #include <array>
 
+#include "etl/vector.h"
+
 #include "hal.hpp"
 //#include "ln298n.hpp"
 #include "rp2040.hpp"
@@ -17,7 +19,8 @@ uint32_t freq = clock::getHz();
 
 void sleep(const uint32_t ms)
 {
-    hal::system::delay((ms / 1000000) * freq);
+    //hal::system::delay((ms / 1000000) * freq);
+    hal::system::delay((freq / 1000) * ms);
 }
 
 void init_pll_usb(const uint32_t div, const uint32_t fbdiv, const uint32_t postdiv1, const uint32_t postdiv2)
@@ -39,6 +42,23 @@ void init_pll_usb(const uint32_t div, const uint32_t fbdiv, const uint32_t postd
     bsp::rp2040::s_pll_usb.pwr.postdivpd = 0x0;
 }
 
+void fpga_init()
+{
+    gpio::setupPin(24, pindir::out, pinfunc::CLOCK);
+}
+
+void print_hex(const std::uint32_t num)
+{
+    etl::format_spec format;
+    format.hex().width(8).fill('0');
+
+    etl::string<8> value;
+    etl::to_string(num, value, format);
+    uart::send(value);
+}
+
+static std::uint32_t null;
+
 int main(void)
 {
     // Reset system to clean state
@@ -50,43 +70,59 @@ int main(void)
 
     //pwmMain();
 
-    // Setup SYS PLL for 12 MHz * 133 / 6 / 2 = 133 MHz
-    //init_pll_sys(1, 133, 6, 2);
-    //init_pll_sys(1, 100, 6, 1);
-    
-    // Setup SYS PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
-    //init_pll_sys(1, 120, 6, 5);
-    //freq = freq_48mhz;
-
-    // Setup USB PLL for 12 MHz * 120 / 6 / 5 = 48 MHz
-    //init_pll_usb(1, 120, 6, 5);
-
-    //setup_clocks();
-
     //i2cMain();
     uartMain();
 
-    hal::spi::init(4, 9, 5, 6, (33 * 1000 * 1000));
+    hal::spi::init(10, 9, 11, 8, (33 * 1000 * 1000)); // Init SPI to read flash
 
-    gpio::setPinDir(9, pindir::out);
+    //bsp::rp2040::s_spi_1.dr.data = 0x9F; // Wake up
+    //bsp::rp2040::s_spi_1.dr.data = 0x00; // Wake up
+    //bsp::rp2040::s_spi_1.dr.data = 0x00; // Wake up
+    //bsp::rp2040::s_spi_1.dr.data = 0x05; // Read Status
 
-    gpio::setPinDir(9, pindir::in);
+    etl::array<std::uint8_t, 6> msg{0x9F, 0x0, 0x0, 0x0, 0x0, 0x0};
+    etl::array<std::uint8_t, 6> msgRcv{};
 
-    std::uint32_t dma_rx = 0;
-    std::uint32_t dma_tx = 1;
+    hal::spi::writeAndRead<std::uint8_t, 6, 6>(msg, msgRcv);
 
-    hal::dma::enable(dma_rx);
+    //sleep(2);
 
-    etl::format_spec format;
-    format.hex().width(8).fill('0');
+    uart::send("Info: ");
+    print_hex(bsp::rp2040::s_dma.ch[1].ctrl.en);
+    print_hex(bsp::rp2040::s_dma.ch[1].ctrl.busy);
+    print_hex(bsp::rp2040::s_spi_1.sr.rne);
+    uart::send("Data: ");
+    for (size_t i = 0; i < msgRcv.size(); i++)
+    {
+        //print_hex(bsp::rp2040::s_spi_1.sr.rne);
+        //print_hex(bsp::rp2040::s_spi_1.dr.data);
+        print_hex(msgRcv.at(i));
+        //sleep(10);
+    }
+    //print_hex(bsp::rp2040::s_spi_1.cpsr.cpsdvsr);
+    //print_hex(bsp::rp2040::s_spi_1.cr0.scr);
+    uart::send("End");
+    print_hex(bsp::rp2040::s_spi_1.sr.rne);
+    uart::send("");
+    /*
+    */
+
+    sleep(1);
+    //gpio::writePin(9, true);
 
     //bsp::rp2040::s_dma.
-    auto regAddr = reinterpret_cast<uint32_t>(&bsp::rp2040::s_dma_dbg.dbg[11].tcr);
+    auto regAddr = reinterpret_cast<uint32_t>(&bsp::rp2040::s_spi_1.cr1);
+
+    print_hex(regAddr);
+    /*
+    etl::format_spec format;
+    format.hex().width(8).fill('0');
 
     etl::string<8> str;
     etl::to_string(regAddr, str, format);
 
     uart::send(str);
+    */
 
     // Registry check
     //if (reinterpret_cast<uint32_t>(&bsp::rp2040::s_uart_0.dmacr) != 0x40034000 + 0x048)

@@ -14,6 +14,8 @@ const uint32_t freq_100khz = 100000;
 
 static uint32_t freq = freq_12mhz;
 
+using namespace hal::pins;
+
 void init_xsoc()
 {
     bsp::rp2040::s_xsoc.control.freq_range = 0xaab;
@@ -85,6 +87,69 @@ void hal::clock::init()
     freq = freq_133mhz;
 
     setup_clocks();
+}
+
+void hal::clock::setupGpio(const pin_id&& pin, const hal::clksrc&& src)
+{
+    std::uint32_t gpclk;
+    if (pin == 21) gpclk = 0;
+    else if (pin == 23) gpclk = 1;
+    else if (pin == 24) gpclk = 2;
+    else if (pin == 25) gpclk = 3;
+
+    switch (src)
+    {
+    case hal::clksrc::PLL_SYSTEM:
+        bsp::rp2040::s_clocks.gpio[gpclk].control.auxsrc = 0x0;
+        break;
+    case hal::clksrc::GPIO0:
+        bsp::rp2040::s_clocks.gpio[gpclk].control.auxsrc = 0x1;
+        break;
+    case hal::clksrc::GPIO1:
+        bsp::rp2040::s_clocks.gpio[gpclk].control.auxsrc = 0x2;
+        break;
+    case hal::clksrc::PLL_USB:
+        bsp::rp2040::s_clocks.gpio[gpclk].control.auxsrc = 0x3;
+        break;
+    case hal::clksrc::ROSC:
+        bsp::rp2040::s_clocks.gpio[gpclk].control.auxsrc = 0x4;
+        break;
+    case hal::clksrc::XOSC:
+        bsp::rp2040::s_clocks.gpio[gpclk].control.auxsrc = 0x5;
+        break;
+    case hal::clksrc::SYSTEM:
+        bsp::rp2040::s_clocks.gpio[gpclk].control.auxsrc = 0x6;
+        break;
+    case hal::clksrc::USB:
+        bsp::rp2040::s_clocks.gpio[gpclk].control.auxsrc = 0x6;
+        break;
+    default:
+        break;
+    }
+
+    bsp::rp2040::s_clocks.gpio[gpclk].div.integer = 4;
+}
+
+void hal::clock::startGpio(const pin_id&& pin)
+{
+    std::uint32_t gpclk;
+    if (pin == 21) gpclk = 0;
+    else if (pin == 23) gpclk = 1;
+    else if (pin == 24) gpclk = 2;
+    else if (pin == 25) gpclk = 3;
+
+    bsp::rp2040::s_clocks.gpio[gpclk].control.enable = 0x1;
+}
+
+void hal::clock::stopGpio(const pin_id&& pin)
+{
+    std::uint32_t gpclk;
+    if (pin == 21) gpclk = 0;
+    else if (pin == 23) gpclk = 1;
+    else if (pin == 24) gpclk = 2;
+    else if (pin == 25) gpclk = 3;
+
+    bsp::rp2040::s_clocks.gpio[gpclk].control.enable = 0x0;
 }
 
 uint32_t hal::clock::getHz()

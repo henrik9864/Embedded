@@ -12,6 +12,9 @@ void system::init()
     s_resets.reset.i2c1 = 1;
     s_resets.reset.uart_0 = 1;
     s_resets.reset.uart_1 = 1;
+    s_resets.reset.spi_0 = 1;
+    s_resets.reset.spi_1 = 1;
+    s_resets.reset.dma = 1;
     s_resets.reset.pads_bank_0 = 1;
 
     s_resets.reset.pio_0 = 0;
@@ -21,6 +24,9 @@ void system::init()
     s_resets.reset.i2c1 = 0;
     s_resets.reset.uart_0 = 0;
     s_resets.reset.uart_1 = 0;
+    s_resets.reset.spi_0 = 0;
+    s_resets.reset.spi_1 = 0;
+    s_resets.reset.dma = 0;
     s_resets.reset.pads_bank_0 = 0;
 
     while (!s_resets.reset_done.pio_0 &&
@@ -30,6 +36,9 @@ void system::init()
         !s_resets.reset_done.i2c1 &&
         !s_resets.reset_done.uart_0 &&
         !s_resets.reset_done.uart_1 &&
+        !s_resets.reset_done.spi_0 &&
+        !s_resets.reset_done.spi_1 &&
+        !s_resets.reset_done.dma &&
         !s_resets.reset_done.pads_bank_0) {
     }
 }
