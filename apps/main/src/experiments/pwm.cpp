@@ -5,16 +5,18 @@ using namespace hal::pins;
 
 void pwmMain()
 {
+    hal::pwn pwm = hal::pwn::getInstance(hal::pwn_id::pwn0);
+
     // Setup LedPin2 as PWM
-    gpio::setupPin(std::move(LedPin), pindir::out, pinfunc::PWM);
-    pwm::enable(std::move(LedPin));
+    gpio::setupPin(LedPin, pindir::out, pinfunc::PWM);
+    pwm.enable(LedPin);
 
     // PWM
     while (true)
     {
         for (auto rb = 0x0000; rb < 0x10000; rb++)
         {
-            pwm::writeCompare(std::move(LedPin), rb);
+            pwm.writeCompare(LedPin, rb);
             system::delay(0x10 / 2);
         }
     }

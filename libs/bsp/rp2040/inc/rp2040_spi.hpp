@@ -29,7 +29,6 @@ namespace hal
 		spi1
 	};
 
-
 	class spi_rp2040
 	{
 	public:

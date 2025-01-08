@@ -17,13 +17,13 @@ namespace hal::pins
 	class gpio
 	{
 	public:
-		static void setupPin(const pin_id&& pin, const pindir&& dir, const pinfunc&& func);
-		static bool readPin(const pin_id&& pin);
-		static void writePin(const pin_id&& pin, bool value);
-		static void togglePin(const pin_id&& pin);
+		static void setupPin(const pin_id& pin, const pindir& dir, const pinfunc& func) noexcept;
+		static bool readPin(const pin_id& pin) noexcept;
+		static void writePin(const pin_id& pin, bool value) noexcept;
+		static void togglePin(const pin_id& pin) noexcept;
 
-		static void setPullUp(const pin_id&& pin);
-		static void setPullDown(const pin_id&& pin);
-		static void setPinDir(const pin_id&& pin, const pindir&& dir);
+		static void setPullUp(const pin_id& pin) noexcept;
+		static void setPullDown(const pin_id& pin) noexcept;
+		static void setPinDir(const pin_id& pin, const pindir& dir) noexcept;
 	};
 }

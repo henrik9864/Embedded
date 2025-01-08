@@ -71,7 +71,7 @@ uint8_t i2c_read(const uint32_t address, bool nostop)
 
 void i2cMain()
 {
-    uart::enable(0, 1, 115200);
+    //uart::enable(0, 1, 115200);
 
     i2c_init(100 * 1000);
 
@@ -94,7 +94,7 @@ void i2cMain()
 
         etl::string<8> text;
 
-        uart::send(etl::to_string(i2c_read(0x34, true), text, format));
+        //uart::send(etl::to_string(i2c_read(0x34, true), text, format));
         //uart::send(etl::to_string(i2c_read(0x0B), text, format));
 
         //i2c_write(0x36, 0x0C, true);

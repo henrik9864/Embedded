@@ -47,19 +47,20 @@ void fpga_init()
     gpio::setupPin(24, pindir::out, pinfunc::CLOCK);
 }
 
-void print_hex(const std::uint32_t num)
+void print_hex(hal::uart uart, const std::uint32_t num)
 {
     etl::format_spec format;
     format.hex().width(8).fill('0');
 
     etl::string<8> value;
     etl::to_string(num, value, format);
-    uart::send(value);
+    uart.send(value);
 }
 
 int main(void)
 {
     hal::spi spi = hal::spi::getInstance(hal::spi_id::spi1);
+    hal::uart uart = hal::uart::getInstance(hal::uart_id::uart0);
 
     // Reset system to clean state
     system::init();
@@ -71,7 +72,9 @@ int main(void)
     //pwmMain();
 
     //i2cMain();
-    uartMain();
+    //uartMain();
+
+    uart.enable(0, 1, 115200);
 
     //hal::spi::init(10, 9, 11, 8, (33 * 1000 * 1000)); // Init SPI to read flash
     spi.init(10, 9, 11, 8, (33 * 1000 * 1000)); // Init SPI to read flash
@@ -98,23 +101,23 @@ int main(void)
     etl::array<std::uint8_t, 6> msgRcv3{};
     spi.writeAndRead<std::uint8_t, 6, 6>(msg3, msgRcv3);
 
-    uart::send("Info: ");
-    print_hex(bsp::rp2040::s_dma.ch[1].ctrl.en);
-    print_hex(bsp::rp2040::s_dma.ch[1].ctrl.busy);
-    print_hex(bsp::rp2040::s_spi_1.sr.rne);
-    uart::send("Data: ");
+    uart.send("Info: ");
+    print_hex(uart, bsp::rp2040::s_dma.ch[1].ctrl.en);
+    print_hex(uart, bsp::rp2040::s_dma.ch[1].ctrl.busy);
+    print_hex(uart, bsp::rp2040::s_spi_1.sr.rne);
+    uart.send("Data: ");
     for (size_t i = 0; i < msgRcv3.size(); i++)
     {
         //print_hex(bsp::rp2040::s_spi_1.sr.rne);
         //print_hex(bsp::rp2040::s_spi_1.dr.data);
-        print_hex(msgRcv3.at(i));
+        print_hex(uart, msgRcv3.at(i));
         //sleep(10);
     }
     //print_hex(bsp::rp2040::s_spi_1.cpsr.cpsdvsr);
     //print_hex(bsp::rp2040::s_spi_1.cr0.scr);
-    uart::send("End");
-    print_hex(bsp::rp2040::s_spi_1.sr.rne);
-    uart::send("");
+    uart.send("End");
+    print_hex(uart, bsp::rp2040::s_spi_1.sr.rne);
+    uart.send("");
     /*
     */
 
@@ -124,7 +127,7 @@ int main(void)
     //bsp::rp2040::s_dma.
     auto regAddr = reinterpret_cast<uint32_t>(&bsp::rp2040::s_spi_1.cr1);
 
-    print_hex(regAddr);
+    print_hex(uart, regAddr);
     /*
     etl::format_spec format;
     format.hex().width(8).fill('0');

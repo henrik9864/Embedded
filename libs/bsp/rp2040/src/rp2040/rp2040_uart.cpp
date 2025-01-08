@@ -2,7 +2,7 @@
 
 using namespace hal::pins;
 
-void hal::uart::enable(const pins::pin_id&& tx, const pins::pin_id&& rx, const std::uint32_t baudrate)
+void hal::uart_rp2040::enable(const pins::pin_id& tx, const pins::pin_id& rx, const std::uint32_t baudrate)
 {
     // (12000000 / ( 16 * 115200 )) = 6.514
     // 0.514 * 64 = 32.666
@@ -29,7 +29,7 @@ void hal::uart::enable(const pins::pin_id&& tx, const pins::pin_id&& rx, const s
     gpio::setupPin(std::move(rx), pindir::out, pinfunc::UART);
 }
 
-void hal::uart::send(uint32_t data)
+void hal::uart_rp2040::send(uint32_t data)
 {
     while (bsp::rp2040::s_uart_0.fr.txff != 0) {};
 
@@ -37,18 +37,18 @@ void hal::uart::send(uint32_t data)
 }
 
 
-void hal::uart::send(etl::string_view str)
+void hal::uart_rp2040::send(etl::string_view str)
 {
     for (size_t i = 0; i < str.length(); i++)
     {
-        hal::uart::send(str.at(i));
+        send(str.at(i));
     }
 
-    hal::uart::send(0x0D);
-    hal::uart::send(0x0A);
+    send(0x0D);
+    send(0x0A);
 }
 
-uint32_t hal::uart::recv()
+uint32_t hal::uart_rp2040::recv()
 {
     while (bsp::rp2040::s_uart_0.fr.rxfe != 0) {};
 

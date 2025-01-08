@@ -5,7 +5,7 @@
 using namespace bsp::rp2040;
 using namespace hal::pins;
 
-void gpio::setupPin(const pin_id&& pin, const pindir&& dir, const pinfunc&& func)
+void gpio::setupPin(const pin_id& pin, const pindir& dir, const pinfunc& func)
 {
 	s_io_bank_0.gpio[pin].control.funcsel = static_cast<uint32_t>(func);
 	//s_io_bank_0.gpio[pin].control. = static_cast<uint32_t>(func);
@@ -20,12 +20,12 @@ void gpio::setupPin(const pin_id&& pin, const pindir&& dir, const pinfunc&& func
 	setPinDir(std::move(pin), std::move(dir));
 }
 
-bool gpio::readPin(const pin_id&& pin)
+bool gpio::readPin(const pin_id& pin)
 {
 	return s_sio.gpio_in & 1 << pin;
 }
 
-void gpio::writePin(const pin_id&& pin, bool value)
+void gpio::writePin(const pin_id& pin, bool value)
 {
 	if (value)
 	{
@@ -37,22 +37,22 @@ void gpio::writePin(const pin_id&& pin, bool value)
 	}
 }
 
-void gpio::togglePin(const pin_id&& pin)
+void gpio::togglePin(const pin_id& pin)
 {
 	s_sio.gpio_out_xor = 1 << pin;
 }
 
-void gpio::setPullUp(const pin_id&& pin)
+void gpio::setPullUp(const pin_id& pin)
 {
 	s_pads_bank_0.gpio[pin].pue = 0x1;
 }
 
-void gpio::setPullDown(const pin_id&& pin)
+void gpio::setPullDown(const pin_id& pin)
 {
 	s_pads_bank_0.gpio[pin].pde = 0x1;
 }
 
-void gpio::setPinDir(const pin_id&& pin, const pindir&& dir)
+void gpio::setPinDir(const pin_id& pin, const pindir& dir)
 {
 	if (dir == pindir::out)
 	{
