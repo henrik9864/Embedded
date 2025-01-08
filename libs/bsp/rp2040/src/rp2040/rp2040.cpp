@@ -54,7 +54,7 @@ uint32_t system::get(const uint32_t a1)
     return *reinterpret_cast<uint32_t*>(a1);
 }
 
-volatile void system::delay(uint32_t a1)
+void system::delay(uint32_t a1)
 {
     __asm volatile (
     ".syntax unified\n"

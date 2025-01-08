@@ -15,6 +15,6 @@ namespace hal
 
         static void put(const uint32_t a1, const uint32_t a2);
         static uint32_t get(const uint32_t a1);
-        static volatile void delay(const uint32_t a1);
+        static void delay(const uint32_t a1);
     };
 }

@@ -57,10 +57,10 @@ void print_hex(const std::uint32_t num)
     uart::send(value);
 }
 
-static std::uint32_t null;
-
 int main(void)
 {
+    hal::spi spi = hal::spi::getInstance(hal::spi_id::spi1);
+
     // Reset system to clean state
     system::init();
 
@@ -73,30 +73,41 @@ int main(void)
     //i2cMain();
     uartMain();
 
-    hal::spi::init(10, 9, 11, 8, (33 * 1000 * 1000)); // Init SPI to read flash
+    //hal::spi::init(10, 9, 11, 8, (33 * 1000 * 1000)); // Init SPI to read flash
+    spi.init(10, 9, 11, 8, (33 * 1000 * 1000)); // Init SPI to read flash
 
-    //bsp::rp2040::s_spi_1.dr.data = 0x9F; // Wake up
-    //bsp::rp2040::s_spi_1.dr.data = 0x00; // Wake up
-    //bsp::rp2040::s_spi_1.dr.data = 0x00; // Wake up
-    //bsp::rp2040::s_spi_1.dr.data = 0x05; // Read Status
+    /*
+    etl::array<std::uint8_t, 1> msg{0x06};
+    etl::array<std::uint8_t, 1> msgRcv{};
+    hal::spi::writeAndRead<std::uint8_t, 1, 1>(msg, msgRcv);
 
-    etl::array<std::uint8_t, 6> msg{0x9F, 0x0, 0x0, 0x0, 0x0, 0x0};
-    etl::array<std::uint8_t, 6> msgRcv{};
+    sleep(2);
 
-    hal::spi::writeAndRead<std::uint8_t, 6, 6>(msg, msgRcv);
+    etl::array<std::uint8_t, 6> msg2{ 0x02, 0x0, 0x0, 0x00, 0x1, 0x1 };
+    etl::array<std::uint8_t, 6> msgRcv2{};
+    hal::spi::writeAndRead<std::uint8_t, 6, 6>(msg2, msgRcv2);
 
-    //sleep(2);
+    sleep(2);
+
+    etl::array<std::uint8_t, 6> msg3{ 0x9F, 0x0, 0x0, 0x00, 0x0, 0x0 };
+    etl::array<std::uint8_t, 6> msgRcv3{};
+    hal::spi::writeAndRead<std::uint8_t, 6, 6>(msg3, msgRcv3);
+    */
+
+    etl::array<std::uint8_t, 6> msg3{ 0x9F, 0x0, 0x0, 0x00, 0x0, 0x0 };
+    etl::array<std::uint8_t, 6> msgRcv3{};
+    spi.writeAndRead<std::uint8_t, 6, 6>(msg3, msgRcv3);
 
     uart::send("Info: ");
     print_hex(bsp::rp2040::s_dma.ch[1].ctrl.en);
     print_hex(bsp::rp2040::s_dma.ch[1].ctrl.busy);
     print_hex(bsp::rp2040::s_spi_1.sr.rne);
     uart::send("Data: ");
-    for (size_t i = 0; i < msgRcv.size(); i++)
+    for (size_t i = 0; i < msgRcv3.size(); i++)
     {
         //print_hex(bsp::rp2040::s_spi_1.sr.rne);
         //print_hex(bsp::rp2040::s_spi_1.dr.data);
-        print_hex(msgRcv.at(i));
+        print_hex(msgRcv3.at(i));
         //sleep(10);
     }
     //print_hex(bsp::rp2040::s_spi_1.cpsr.cpsdvsr);
