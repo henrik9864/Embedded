@@ -8,6 +8,8 @@
 //#include "ln298n.hpp"
 #include "rp2040.hpp"
 
+#include "w25q32.hpp"
+
 #include "experiments/uart.hpp"
 #include "experiments/i2c.hpp"
 
@@ -97,6 +99,7 @@ int main(void)
     hal::spi::writeAndRead<std::uint8_t, 6, 6>(msg3, msgRcv3);
     */
 
+    /*
     etl::array<std::uint8_t, 6> msg3{ 0x9F, 0x0, 0x0, 0x00, 0x0, 0x0 };
     etl::array<std::uint8_t, 6> msgRcv3{};
     spi.writeAndRead<std::uint8_t, 6, 6>(msg3, msgRcv3);
@@ -118,8 +121,32 @@ int main(void)
     uart.send("End");
     print_hex(uart, bsp::rp2040::s_spi_1.sr.rne);
     uart.send("");
-    /*
     */
+
+    drivers::flash::w25q32 flash{ spi };
+    drivers::flash::flash_info info = flash.read_info();
+
+    flash.write_enable();
+    drivers::flash::flash_status status = flash.read_status();
+
+    uart.send("Info: ");
+    print_hex(uart, info.manufacture_id);
+    print_hex(uart, info.device_id);
+
+    uart.send("Status: ");
+    print_hex(uart, status.busy);
+    print_hex(uart, status.write_enable);
+
+    //etl::array<std::uint8_t, 1> data = { 0xFA };
+    //flash.write_bytes<1>(0, data);
+
+    auto bytes = flash.read_bytes<8>(0);
+
+    uart.send("Bytes: ");
+    for (size_t i = 0; i < bytes.size(); i++)
+    {
+        print_hex(uart, bytes.at(i));
+    }
 
     sleep(1);
     //gpio::writePin(9, true);

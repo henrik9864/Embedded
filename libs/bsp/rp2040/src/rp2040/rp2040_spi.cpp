@@ -78,7 +78,14 @@ void hal::spi_rp2040::writeAndRead(const etl::array<T, sizeIn>& dataOut, etl::ar
 
 // TODO: this is not optimal, move method to header file.
 template void hal::spi_rp2040::writeAndRead<std::uint8_t, 1, 1>(const etl::array<std::uint8_t, 1>& dataOut, etl::array<std::uint8_t, 1>& dataIn);
+template void hal::spi_rp2040::writeAndRead<std::uint8_t, 2, 2>(const etl::array<std::uint8_t, 2>& dataOut, etl::array<std::uint8_t, 2>& dataIn);
+template void hal::spi_rp2040::writeAndRead<std::uint8_t, 3, 3>(const etl::array<std::uint8_t, 3>& dataOut, etl::array<std::uint8_t, 3>& dataIn);
+template void hal::spi_rp2040::writeAndRead<std::uint8_t, 4, 4>(const etl::array<std::uint8_t, 4>& dataOut, etl::array<std::uint8_t, 4>& dataIn);
+template void hal::spi_rp2040::writeAndRead<std::uint8_t, 5, 5>(const etl::array<std::uint8_t, 5>& dataOut, etl::array<std::uint8_t, 5>& dataIn);
 template void hal::spi_rp2040::writeAndRead<std::uint8_t, 6, 6>(const etl::array<std::uint8_t, 6>& dataOut, etl::array<std::uint8_t, 6>& dataIn);
+template void hal::spi_rp2040::writeAndRead<std::uint8_t, 7, 7>(const etl::array<std::uint8_t, 7>& dataOut, etl::array<std::uint8_t, 7>& dataIn);
+template void hal::spi_rp2040::writeAndRead<std::uint8_t, 8, 8>(const etl::array<std::uint8_t, 8>& dataOut, etl::array<std::uint8_t, 8>& dataIn);
+template void hal::spi_rp2040::writeAndRead<std::uint8_t, 9, 9>(const etl::array<std::uint8_t, 9>& dataOut, etl::array<std::uint8_t, 9>& dataIn);
 
 std::uint32_t hal::spi_rp2040::setBaudrate(const std::uint32_t baudrate)
 {
